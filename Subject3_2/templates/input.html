@@ -124,8 +124,8 @@
                     <label><input type="checkbox" name="languages" value="HTML/CSS" {% if member and 'HTML/CSS' in member.languages %}checked{% endif %}> HTML/CSS</label>
                     <label><input type="checkbox" name="languages" value="SQL" {% if member and 'SQL' in member.languages %}checked{% endif %}> SQL</label>
                     <label class="etc-language">
-                        <input type="checkbox" name="language_etc_check">
-                        <input type="text" name="language_etc" placeholder="직접 입력">
+                        <input type="checkbox" name="language_etc_check" {% if member_custom_language %}checked{% endif %}>
+                        <input type="text" name="language_etc" placeholder="직접 입력" value="{{ member_custom_language }}">
                     </label>
                 </div>
 

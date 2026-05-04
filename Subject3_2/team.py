@@ -14,6 +14,7 @@ DATA_FILE = os.path.join(app.root_path, "data", "members.json")
 
 UPLOAD_FOLDER = os.path.join(app.root_path, "static", "uploads")
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
+PREDEFINED_LANGUAGES = {"Python", "Java", "C/C++", "HTML/CSS", "SQL"}
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
@@ -119,16 +120,25 @@ def input_page():
     member_id = request.args.get("member_id", type=int)
 
     member = None
+    member_custom_language = ""
     if member_id:
         member = get_generated_member_by_id(member_id)
 
         if member is None:
             abort(404)
 
+        custom_languages = [
+            language
+            for language in member.get("languages", [])
+            if language not in PREDEFINED_LANGUAGES
+        ]
+        member_custom_language = ", ".join(custom_languages)
+
     return render_template(
         "input.html",
         team=team,
         member=member,
+        member_custom_language=member_custom_language,
         member_count=len(team.get("members", []))
     )
 
@@ -188,11 +198,10 @@ def update_member():
     })
     languages = request.form.getlist("languages")
 
-    languages = [lang for lang in languages if lang != "직접 입력"]
-
     language_etc = request.form.get("language_etc", "").strip()
+    language_etc_checked = request.form.get("language_etc_check")
 
-    if language_etc:
+    if language_etc_checked and language_etc:
         languages.append(language_etc)
 
     # 공통 member_data
