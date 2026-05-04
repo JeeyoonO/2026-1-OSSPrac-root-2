@@ -10,7 +10,7 @@
 
     <header class="navbar">
         <div class="nav-inner">
-            <div class="logo">OSSPrac</div>
+            <a href="{{ url_for('index') }}" class="logo">OSSPrac</a>
 
             <nav class="nav-menu">
                 <a href="/">ROOT팀 소개</a>
@@ -58,8 +58,7 @@
             {% endif %}
 
             {% if member or member_count < 4 %}
-            {% set portfolio = member.portfolio[0] if member and member.portfolio else {} %}
-            {% set period_parts = portfolio.period.split(' ~ ') if portfolio.period else ['', ''] %}
+            {% set portfolios = member.portfolio if member and member.portfolio else [{}] %}
             <section class="form-card">
                 <h2>
                     {% if member %}
@@ -124,8 +123,8 @@
                     <label><input type="checkbox" name="languages" value="HTML/CSS" {% if member and 'HTML/CSS' in member.languages %}checked{% endif %}> HTML/CSS</label>
                     <label><input type="checkbox" name="languages" value="SQL" {% if member and 'SQL' in member.languages %}checked{% endif %}> SQL</label>
                     <label class="etc-language">
-                        <input type="checkbox" name="language_etc_check">
-                        <input type="text" name="language_etc" placeholder="직접 입력">
+                        <input type="checkbox" name="language_etc_check" {% if member_custom_language %}checked{% endif %}>
+                        <input type="text" name="language_etc" placeholder="직접 입력" value="{{ member_custom_language }}">
                     </label>
                 </div>
 
@@ -138,21 +137,49 @@
 
                 <label>Instagram 아이디</label>
                     <input type="text" name="sns" placeholder="Instagram 아이디 입력" value="{{ member.sns|replace('https://instagram.com/', '') if member else '' }}">
-                <label>포트폴리오</label>
 
-                <div class="portfolio-form">
-                    <input type="text" name="portfolio_title" placeholder="프로젝트명" value="{{ portfolio.title }}">
+                <label>포트폴리오 링크</label>
+                    <input type="url" name="portfolio_link" placeholder="https://example.com" value="{{ member.portfolio_link if member else '' }}">
 
-                <div class="portfolio-date-row">
-                    <input type="date" name="portfolio_start_date" value="{{ period_parts[0] }}">
-                    <span>~</span>
-                    <input type="date" name="portfolio_end_date" value="{{ period_parts[1] }}">
+                <label>포트폴리오 파일</label>
+                <div class="file-row">
+                    <input type="file" name="portfolio_file">
+                    {% if member and member.portfolio_file %}
+                    <p class="current-file">현재 파일: {{ member.portfolio_file_name }}</p>
+                    <input type="hidden" name="portfolio_file_path" value="{{ member.portfolio_file }}">
+                    <input type="hidden" name="portfolio_file_name" value="{{ member.portfolio_file_name }}">
+                    {% endif %}
                 </div>
 
-    <input type="text" name="portfolio_role" placeholder="역할" value="{{ portfolio.role }}">
+                <label>포트폴리오</label>
 
-    <textarea name="portfolio_desc" placeholder="설명">{{ portfolio.desc }}</textarea>
-</div>
+                <div class="portfolio-list" id="portfolioList">
+                    {% for portfolio in portfolios %}
+                    {% set period_parts = portfolio.period.split(' ~ ') if portfolio.period else ['', ''] %}
+                    <div class="portfolio-form">
+                        <div class="portfolio-form-header">
+                            <strong>프로젝트 {{ loop.index }}</strong>
+                            <button type="button" class="portfolio-remove-btn">삭제</button>
+                        </div>
+
+                        <input type="text" name="portfolio_title" placeholder="프로젝트명" value="{{ portfolio.title }}">
+
+                        <div class="portfolio-date-row">
+                            <input type="date" name="portfolio_start_date" value="{{ period_parts[0] }}">
+                            <span>~</span>
+                            <input type="date" name="portfolio_end_date" value="{{ period_parts[1] }}">
+                        </div>
+
+                        <input type="text" name="portfolio_role" placeholder="역할" value="{{ portfolio.role }}">
+
+                        <textarea name="portfolio_desc" placeholder="설명">{{ portfolio.desc }}</textarea>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button type="button" class="portfolio-add-btn" id="addPortfolioBtn">
+                    프로젝트 추가
+                </button>
             </section>
             {% else %}
             <section class="form-card">
@@ -200,10 +227,56 @@
 </div>
 <script>
 document.querySelector("form").addEventListener("keydown", function(e) {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && e.target.tagName !== "TEXTAREA" && !e.isComposing) {
         e.preventDefault();
     }
 });
+
+const portfolioList = document.getElementById("portfolioList");
+const addPortfolioBtn = document.getElementById("addPortfolioBtn");
+
+function updatePortfolioHeaders() {
+    if (!portfolioList) {
+        return;
+    }
+
+    portfolioList.querySelectorAll(".portfolio-form").forEach(function(item, index) {
+        item.querySelector("strong").textContent = "프로젝트 " + (index + 1);
+        item.querySelector(".portfolio-remove-btn").disabled = portfolioList.children.length === 1;
+    });
+}
+
+function bindPortfolioRemove(button) {
+    button.addEventListener("click", function() {
+        if (portfolioList.children.length === 1) {
+            button.closest(".portfolio-form").querySelectorAll("input, textarea").forEach(function(field) {
+                field.value = "";
+            });
+            return;
+        }
+
+        button.closest(".portfolio-form").remove();
+        updatePortfolioHeaders();
+    });
+}
+
+if (portfolioList && addPortfolioBtn) {
+    portfolioList.querySelectorAll(".portfolio-remove-btn").forEach(bindPortfolioRemove);
+
+    addPortfolioBtn.addEventListener("click", function() {
+        const clone = portfolioList.querySelector(".portfolio-form").cloneNode(true);
+
+        clone.querySelectorAll("input, textarea").forEach(function(field) {
+            field.value = "";
+        });
+
+        bindPortfolioRemove(clone.querySelector(".portfolio-remove-btn"));
+        portfolioList.appendChild(clone);
+        updatePortfolioHeaders();
+    });
+
+    updatePortfolioHeaders();
+}
 </script>
 </body>
 </html>

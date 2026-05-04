@@ -14,6 +14,11 @@ DATA_FILE = os.path.join(app.root_path, "data", "members.json")
 
 UPLOAD_FOLDER = os.path.join(app.root_path, "static", "uploads")
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
+ALLOWED_PORTFOLIO_EXTENSIONS = {
+    "pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx", "zip",
+    "png", "jpg", "jpeg", "gif", "webp"
+}
+PREDEFINED_LANGUAGES = {"Python", "Java", "C/C++", "HTML/CSS", "SQL"}
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
@@ -75,8 +80,8 @@ def get_generated_member_by_id(member_id):
 
     return None
 
-def allowed_file(filename):
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+def allowed_file(filename, allowed_extensions=ALLOWED_EXTENSIONS):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in allowed_extensions
 
 
 def save_uploaded_file(file, default_path):
@@ -96,6 +101,27 @@ def save_uploaded_file(file, default_path):
     file.save(save_path)
 
     return f"uploads/{new_filename}"
+
+
+def save_uploaded_asset(file, default_path="", default_name="", subfolder="", allowed_extensions=None):
+    if file is None or file.filename == "":
+        return default_path, default_name
+
+    allowed_extensions = allowed_extensions or ALLOWED_EXTENSIONS
+    if not allowed_file(file.filename, allowed_extensions):
+        return default_path, default_name
+
+    upload_folder = os.path.join(app.config["UPLOAD_FOLDER"], subfolder)
+    os.makedirs(upload_folder, exist_ok=True)
+
+    ext = file.filename.rsplit(".", 1)[1].lower()
+    new_filename = f"{uuid.uuid4().hex}.{ext}"
+
+    save_path = os.path.join(upload_folder, new_filename)
+    file.save(save_path)
+
+    upload_path = f"uploads/{new_filename}" if not subfolder else f"uploads/{subfolder}/{new_filename}"
+    return upload_path, file.filename
 
 
 @app.route("/")
@@ -119,16 +145,25 @@ def input_page():
     member_id = request.args.get("member_id", type=int)
 
     member = None
+    member_custom_language = ""
     if member_id:
         member = get_generated_member_by_id(member_id)
 
         if member is None:
             abort(404)
 
+        custom_languages = [
+            language
+            for language in member.get("languages", [])
+            if language not in PREDEFINED_LANGUAGES
+        ]
+        member_custom_language = ", ".join(custom_languages)
+
     return render_template(
         "input.html",
         team=team,
         member=member,
+        member_custom_language=member_custom_language,
         member_count=len(team.get("members", []))
     )
 
@@ -166,33 +201,55 @@ def update_member():
         return redirect(url_for("input_page"))
 
     profile_image = request.files.get("profile_image")
-    portfolio_title = request.form.get("portfolio_title", "").strip()
-    portfolio_start = request.form.get("portfolio_start_date", "").strip()
-    portfolio_end = request.form.get("portfolio_end_date", "").strip()
-    portfolio_role = request.form.get("portfolio_role", "").strip()
-    portfolio_desc = request.form.get("portfolio_desc", "").strip()
-
-    portfolio = []
     github_id = request.form.get("github", "").strip()
     sns_id = request.form.get("sns", "").strip()
 
     github_url = f"https://github.com/{github_id}" if github_id else ""
     sns_url = f"https://instagram.com/{sns_id}" if sns_id else ""
+    portfolio_link = request.form.get("portfolio_link", "").strip()
+    portfolio_file = request.files.get("portfolio_file")
+    portfolio_file_path, portfolio_file_name = save_uploaded_asset(
+        portfolio_file,
+        request.form.get("portfolio_file_path", "").strip(),
+        request.form.get("portfolio_file_name", "").strip(),
+        subfolder="portfolio",
+        allowed_extensions=ALLOWED_PORTFOLIO_EXTENSIONS
+    )
 
-    if portfolio_title or portfolio_start or portfolio_end or portfolio_role or portfolio_desc:
-        portfolio.append({
-            "title": portfolio_title,
-            "period": f"{portfolio_start} ~ {portfolio_end}",
-            "role": portfolio_role,
-            "desc": portfolio_desc
-    })
+    portfolio = []
+    portfolio_titles = request.form.getlist("portfolio_title")
+    portfolio_starts = request.form.getlist("portfolio_start_date")
+    portfolio_ends = request.form.getlist("portfolio_end_date")
+    portfolio_roles = request.form.getlist("portfolio_role")
+    portfolio_descs = request.form.getlist("portfolio_desc")
+
+    for title, start, end, role, desc in zip(
+        portfolio_titles,
+        portfolio_starts,
+        portfolio_ends,
+        portfolio_roles,
+        portfolio_descs
+    ):
+        title = title.strip()
+        start = start.strip()
+        end = end.strip()
+        role = role.strip()
+        desc = desc.strip()
+
+        if title or start or end or role or desc:
+            portfolio.append({
+                "title": title,
+                "period": f"{start} ~ {end}",
+                "role": role,
+                "desc": desc
+            })
+
     languages = request.form.getlist("languages")
 
-    languages = [lang for lang in languages if lang != "직접 입력"]
-
     language_etc = request.form.get("language_etc", "").strip()
+    language_etc_checked = request.form.get("language_etc_check")
 
-    if language_etc:
+    if language_etc_checked and language_etc:
         languages.append(language_etc)
 
     # 공통 member_data
@@ -208,6 +265,9 @@ def update_member():
         "github": github_url,
         "sns": sns_url,
         "intro": request.form.get("intro", "").strip(),
+        "portfolio_link": portfolio_link,
+        "portfolio_file": portfolio_file_path,
+        "portfolio_file_name": portfolio_file_name,
         "portfolio": portfolio
     }
 
