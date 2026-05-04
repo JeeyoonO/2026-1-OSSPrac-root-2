@@ -105,7 +105,7 @@
                     {% for item in member.portfolio %}
                     <tr>
                         <td>{{ item.title }}</td>
-                        <td>{{ item.period }}</td>
+                        <td>{{ item.period | replace(' ~ ', '<br>~ ') | safe }}</td>
                         <td>{{ item.role }}</td>
                         <td>{{ item.desc }}</td>
                     </tr>

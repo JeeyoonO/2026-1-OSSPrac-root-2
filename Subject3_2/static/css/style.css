@@ -336,14 +336,22 @@ body {
 .portfolio-table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
     font-size: 13px;
 }
 
 .portfolio-table th,
 .portfolio-table td {
     border-bottom: 1px solid #eee;
-    padding: 12px 8px;
+    border-right: 1px solid #eee;
+    padding: 14px 14px;
     text-align: center;
+    vertical-align: top;
+}
+
+.portfolio-table th:last-child,
+.portfolio-table td:last-child {
+    border-right: none;
 }
 
 .portfolio-table th {
@@ -638,12 +646,40 @@ body {
 }
 .portfolio-table td,
 .portfolio-table th {
-    white-space: nowrap;
+    word-break: keep-all;
 }
+
+.portfolio-table th:nth-child(1),
+.portfolio-table td:nth-child(1) {
+    width: 28%;
+    white-space: normal;
+    vertical-align: middle;
+}
+
+.portfolio-table th:nth-child(2),
+.portfolio-table td:nth-child(2) {
+    width: 20%;
+    padding-left: 18px;
+    padding-right: 18px;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.portfolio-table th:nth-child(3),
+.portfolio-table td:nth-child(3) {
+    width: 14%;
+    padding-left: 18px;
+    padding-right: 18px;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.portfolio-table th:nth-child(4),
 .portfolio-table td:nth-child(4) {
+    width: 38%;
     text-align: left;
     white-space: normal;
-    word-break: keep-all;
+    line-height: 1.6;
 }
 .portfolio-form {
     display: flex;
