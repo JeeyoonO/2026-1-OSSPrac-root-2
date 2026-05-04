@@ -13,7 +13,7 @@
             <div class="logo">OSSPrac</div>
 
             <nav class="nav-menu">
-                <a href="/">Root팀 소개</a>
+                <a href="/">ROOT팀 소개</a>
                 <a href="/community">커뮤니티</a>
                 <a href="/input" class="active">팀페이지 제작</a>
                 <a href="/contact">Contact</a>
@@ -36,15 +36,19 @@
         </div>
 
         <div class="card member-card">
-            <h3>생성된 팀원 소개</h3>
+            <h3>팀원 소개</h3>
 
             <div class="members">
                 {% for member in members %}
                 <a href="/members/{{ member.id }}" class="member">
-                    <div class="profile">
-                        <img src="{{ url_for('static', filename=member.image) }}" alt="{{ member.name }}">
+                    <div class="member-info">
+                        <span class="member-name">{{ member.name }}</span>
+                        <span class="member-role">{{ member.role }}</span>
                     </div>
-                    <p>{{ member.name }}</p>
+
+                    <div class="profile"
+                        style="background-image: url('{{ url_for('static', filename=member.image) }}');">
+                    </div>
                 </a>
                 {% endfor %}
             </div>

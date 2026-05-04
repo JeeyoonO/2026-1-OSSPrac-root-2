@@ -19,10 +19,10 @@ body {
 
 /* 네비게이션 */
 .navbar {
-    padding: 0 24px;         
-    height: 60px;             
+    padding: 0 24px;
+    height: 60px;
     display: flex;
-    align-items: center;      
+    align-items: center;
     background: white;
     border-bottom: 1px solid #eee;
 }
@@ -49,10 +49,9 @@ body {
     color: #555;
     font-size: 13px;
     font-weight: 600;
-
-    height: 60px;             
+    height: 60px;
     display: flex;
-    align-items: center;    
+    align-items: center;
 }
 
 .nav-menu a.active {
@@ -77,7 +76,6 @@ body {
 .team-image {
     height: 360px;
     border-radius: 12px 12px 0 0;
-
     background-image: url("/static/images/root-team.png");
     background-size: cover;
     background-position: center center;
@@ -107,6 +105,7 @@ body {
     color: #222;
     text-align: center;
 }
+
 .team-desc {
     width: 80%;
     margin: 0 auto 28px;
@@ -127,19 +126,27 @@ body {
 /* 팀원 영역 */
 .members {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    width: 360px;
-    margin: 20px auto 0;
-    gap: 18px 48px;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    gap: 34px 35px;
+    margin: 24px auto 0;
+    max-width: 600px;
 }
 
-.members {
-    display: grid;
-    justify-content: center;   /* 전체 가운데 */
-    justify-items: center;     /* 각 카드 가운데 */
-    align-items: center;
-    gap: 28px 70px;
-    margin: 24px auto 0;
+.member {
+    width: 240px;
+    height: 240px;
+    text-align: left;
+    text-decoration: none;
+    color: #222;
+    background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+    border-radius: 14px;
+    padding: 16px;
+    box-sizing: border-box;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    transition: 0.2s;
+    overflow: hidden;
 }
 
 /* 1명 */
@@ -149,12 +156,12 @@ body {
 
 /* 2명 */
 .members:has(.member:nth-child(2):last-child) {
-    grid-template-columns: repeat(2, 120px);
+    grid-template-columns: repeat(2, 240px);
 }
 
 /* 3명 */
 .members:has(.member:nth-child(3):last-child) {
-    grid-template-columns: repeat(2, 120px);
+    grid-template-columns: repeat(2, 240px);
 }
 
 .members:has(.member:nth-child(3):last-child) .member:nth-child(1) {
@@ -164,44 +171,51 @@ body {
 
 /* 4명 */
 .members:has(.member:nth-child(4):last-child) {
-    grid-template-columns: repeat(2, 120px);
-}
-
-
-.member {
-    width: 120px;
-    text-align: center;
-    text-decoration: none;
-    color: #222;
-    transition: 0.2s;
+    grid-template-columns: repeat(2, 240px);
 }
 
 .member .profile {
-    width: 92px;
-    height: 92px;
-    border-radius: 50%;
-    background: #ddd;
-    margin: 0 auto 10px;
+    width: 190px;
+    height: 190px;
+    border-radius: 10px;
+    background-size: cover;
+    background-position: center top;
+    margin: 0 auto;
 }
 
-.member p {
-    font-size: 15px;
-    font-weight: 700;
-    margin: 0;
-    color: #222;
+.member-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+    flex-wrap: nowrap;   /* 줄바꿈 방지 */
+}
+
+.member-name {
+    font-size: 18px;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.member-role {
+    font-size: 12px;
+    color: #666;
+    white-space: nowrap;
 }
 
 .member:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
 }
+
 .profile {
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
+    width: 150px;
+    height: 120px;
+    border-radius: 0;
     background-size: cover;
-    background-position: center;
-    background-color: #ddd; /* fallback */
-    margin: 0 auto 10px;
+    background-position: center top;
+    background-color: transparent;
+    margin: 10px auto 0;
 }
 
 /* 팀원 상세 페이지 */
@@ -528,12 +542,6 @@ body {
 
 .radio-row input {
     accent-color: #6c63ff;
-}
-.member .profile img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
 }
 /* Contact 페이지 */
 .contact-card {
