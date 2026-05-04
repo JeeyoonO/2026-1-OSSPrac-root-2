@@ -230,6 +230,17 @@ body {
     box-shadow: 0 4px 14px rgba(0,0,0,0.08);
 }
 
+.detail-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 14px;
+}
+
+.pdf-save-btn {
+    border: none;
+    cursor: pointer;
+}
+
 .detail-top {
     display: flex;
     gap: 36px;
@@ -315,12 +326,15 @@ body {
 .link-box strong {
     display: block;
     font-size: 20px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
-.link-box span {
+.link-box span,
+.link-handle {
+    display: block;
     font-size: 13px;
     color: #666;
+    word-break: break-all;
 }
 
 .portfolio-section {
@@ -714,4 +728,45 @@ body {
 .portfolio-form textarea {
     height: 90px;
     resize: none;
+}
+
+@media print {
+    @page {
+        margin: 14mm;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    body {
+        background: white;
+        display: flex;
+        justify-content: center;
+        padding: 24px 0;
+    }
+
+    .page {
+        width: 600px;
+        min-height: auto;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        overflow: hidden;
+    }
+
+    .navbar,
+    .detail-toolbar,
+    .detail-buttons {
+        display: none;
+    }
+
+    .detail-container {
+        padding: 28px;
+    }
+
+    .profile-detail-card,
+    .link-box {
+        box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
 }

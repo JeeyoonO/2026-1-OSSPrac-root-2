@@ -23,6 +23,14 @@
 
     <div class="detail-container">
 
+        {% if not is_root_member %}
+        <div class="detail-toolbar">
+            <button type="button" class="small-btn purple pdf-save-btn" onclick="window.print()">
+                PDF로 저장
+            </button>
+        </div>
+        {% endif %}
+
         <section class="profile-detail-card">
             <div class="detail-top">
                 <div class="detail-photo">
@@ -81,11 +89,13 @@
             <a href="{{ member.github }}" class="link-box" target="_blank">
                 <img src="{{ url_for('static', filename='images/github.png') }}" class="link-icon">
                 <strong>GitHub</strong>
+                <span class="link-handle">{{ member.github | replace('https://github.com/', '@') }}</span>
             </a>
 
             <a href="{{ member.sns }}" class="link-box" target="_blank">
                 <img src="{{ url_for('static', filename='images/instagram.png') }}" class="link-icon">
                 <strong>Instagram</strong>
+                <span class="link-handle">{{ member.sns | replace('https://instagram.com/', '@') }}</span>
             </a>
         </section>
 
