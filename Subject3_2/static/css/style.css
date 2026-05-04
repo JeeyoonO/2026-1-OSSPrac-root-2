@@ -344,9 +344,34 @@ body {
     padding-top: 20px;
 }
 
+.portfolio-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
 .portfolio-section h2 {
     font-size: 22px;
-    margin-bottom: 14px;
+    margin: 0;
+}
+
+.portfolio-resource-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.portfolio-resource-btn {
+    border: 1px solid #6c63ff;
+    border-radius: 9px;
+    color: #6c63ff;
+    padding: 8px 11px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
 }
 
 .portfolio-table {
@@ -406,6 +431,7 @@ body {
 }
 
 .form-card input[type="text"],
+.form-card input[type="url"],
 .form-card input[type="email"],
 .form-card textarea {
     width: 100%;
@@ -542,12 +568,14 @@ body {
 }
 
 .form-card input[type="text"],
+.form-card input[type="url"],
 .form-card input[type="email"] {
     background: #fbfaff;
     border: 1px solid #ddd8ff;
 }
 
 .form-card input[type="text"]:focus,
+.form-card input[type="url"]:focus,
 .form-card input[type="email"]:focus {
     border-color: #6c63ff;
     box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15);
@@ -556,6 +584,12 @@ body {
 .file-row {
     background: #f3f0ff;
     border: 1px dashed #8b80ff;
+}
+
+.current-file {
+    margin: 8px 0 0;
+    color: #666;
+    font-size: 13px;
 }
 
 .radio-row label {

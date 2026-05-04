@@ -14,6 +14,10 @@ DATA_FILE = os.path.join(app.root_path, "data", "members.json")
 
 UPLOAD_FOLDER = os.path.join(app.root_path, "static", "uploads")
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif", "webp"}
+ALLOWED_PORTFOLIO_EXTENSIONS = {
+    "pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx", "zip",
+    "png", "jpg", "jpeg", "gif", "webp"
+}
 PREDEFINED_LANGUAGES = {"Python", "Java", "C/C++", "HTML/CSS", "SQL"}
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -76,8 +80,8 @@ def get_generated_member_by_id(member_id):
 
     return None
 
-def allowed_file(filename):
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+def allowed_file(filename, allowed_extensions=ALLOWED_EXTENSIONS):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in allowed_extensions
 
 
 def save_uploaded_file(file, default_path):
@@ -97,6 +101,27 @@ def save_uploaded_file(file, default_path):
     file.save(save_path)
 
     return f"uploads/{new_filename}"
+
+
+def save_uploaded_asset(file, default_path="", default_name="", subfolder="", allowed_extensions=None):
+    if file is None or file.filename == "":
+        return default_path, default_name
+
+    allowed_extensions = allowed_extensions or ALLOWED_EXTENSIONS
+    if not allowed_file(file.filename, allowed_extensions):
+        return default_path, default_name
+
+    upload_folder = os.path.join(app.config["UPLOAD_FOLDER"], subfolder)
+    os.makedirs(upload_folder, exist_ok=True)
+
+    ext = file.filename.rsplit(".", 1)[1].lower()
+    new_filename = f"{uuid.uuid4().hex}.{ext}"
+
+    save_path = os.path.join(upload_folder, new_filename)
+    file.save(save_path)
+
+    upload_path = f"uploads/{new_filename}" if not subfolder else f"uploads/{subfolder}/{new_filename}"
+    return upload_path, file.filename
 
 
 @app.route("/")
@@ -181,6 +206,15 @@ def update_member():
 
     github_url = f"https://github.com/{github_id}" if github_id else ""
     sns_url = f"https://instagram.com/{sns_id}" if sns_id else ""
+    portfolio_link = request.form.get("portfolio_link", "").strip()
+    portfolio_file = request.files.get("portfolio_file")
+    portfolio_file_path, portfolio_file_name = save_uploaded_asset(
+        portfolio_file,
+        request.form.get("portfolio_file_path", "").strip(),
+        request.form.get("portfolio_file_name", "").strip(),
+        subfolder="portfolio",
+        allowed_extensions=ALLOWED_PORTFOLIO_EXTENSIONS
+    )
 
     portfolio = []
     portfolio_titles = request.form.getlist("portfolio_title")
@@ -231,6 +265,9 @@ def update_member():
         "github": github_url,
         "sns": sns_url,
         "intro": request.form.get("intro", "").strip(),
+        "portfolio_link": portfolio_link,
+        "portfolio_file": portfolio_file_path,
+        "portfolio_file_name": portfolio_file_name,
         "portfolio": portfolio
     }
 

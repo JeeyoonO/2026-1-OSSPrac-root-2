@@ -137,6 +137,20 @@
 
                 <label>Instagram 아이디</label>
                     <input type="text" name="sns" placeholder="Instagram 아이디 입력" value="{{ member.sns|replace('https://instagram.com/', '') if member else '' }}">
+
+                <label>포트폴리오 링크</label>
+                    <input type="url" name="portfolio_link" placeholder="https://example.com" value="{{ member.portfolio_link if member else '' }}">
+
+                <label>포트폴리오 파일</label>
+                <div class="file-row">
+                    <input type="file" name="portfolio_file">
+                    {% if member and member.portfolio_file %}
+                    <p class="current-file">현재 파일: {{ member.portfolio_file_name }}</p>
+                    <input type="hidden" name="portfolio_file_path" value="{{ member.portfolio_file }}">
+                    <input type="hidden" name="portfolio_file_name" value="{{ member.portfolio_file_name }}">
+                    {% endif %}
+                </div>
+
                 <label>포트폴리오</label>
 
                 <div class="portfolio-list" id="portfolioList">

@@ -100,7 +100,25 @@
         </section>
 
         <section class="portfolio-section">
-            <h2>Portfolio</h2>
+            <div class="portfolio-section-header">
+                <h2>Portfolio</h2>
+
+                <div class="portfolio-resource-buttons">
+                    {% if member.portfolio_link %}
+                    <a href="{{ member.portfolio_link }}" class="portfolio-resource-btn" target="_blank">
+                        링크 열기
+                    </a>
+                    {% endif %}
+
+                    {% if member.portfolio_file %}
+                    <a href="{{ url_for('static', filename=member.portfolio_file) }}"
+                       class="portfolio-resource-btn"
+                       download="{{ member.portfolio_file_name }}">
+                        파일 다운로드
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
 
             <table class="portfolio-table">
                 <thead>
