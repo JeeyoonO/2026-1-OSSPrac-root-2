@@ -1,0 +1,79 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f3f5fb;
+    display: flex;
+    justify-content: center;
+    padding: 8px 0;
+}
+
+/* 전체를 하나의 카드처럼 */
+.page {
+    width: 600px;
+    min-height: 800px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    overflow: hidden;
+}
+
+/* 네비게이션 */
+.navbar {
+    padding: 0 24px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    background: white;
+    border-bottom: 1px solid #eee;
+}
+
+.nav-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.logo {
+    color: #000;
+    font-weight: 800;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 22px;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: #555;
+    font-size: 13px;
+    font-weight: 600;
+    height: 60px;
+    display: flex;
+    align-items: center;
+}
+
+.nav-menu a.active {
+    color: #6c63ff;
+    border-bottom: 3px solid #6c63ff;
+}
+
+/* 메인 */
+.container {
+    padding: 22px;
+}
+
+.card {
+    background: white;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+    margin-bottom: 32px;
+}
+/*커뮤니티 숨기기*/
+.nav-menu a[href="/community"] {
+    display: none;
+}

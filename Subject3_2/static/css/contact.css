@@ -1,0 +1,84 @@
+/* Contact 페이지 */
+.contact-card {
+    background: linear-gradient(180deg, #ffffff 0%, #fbfaff 100%);
+    border: 1px solid #e8e5ff;
+    border-radius: 18px;
+    padding: 28px;
+    box-shadow: 0 8px 24px rgba(108, 99, 255, 0.12);
+}
+
+.contact-title-box {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.contact-title-box h2 {
+    display: inline-block;
+    background: #f1efff;
+    color: #4f46e5;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-size: 22px;
+    margin: 0 0 12px;
+}
+
+.contact-title-box p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.contact-table-wrap {
+    overflow-x: auto;
+}
+
+.contact-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 14px;
+    overflow: hidden;
+    font-size: 14px;
+}
+
+.contact-table th {
+    background: #f6f4ff;
+    color: #333;
+    padding: 14px 10px;
+    border-bottom: 1px solid #e8e5ff;
+}
+
+.contact-table td {
+    padding: 14px 10px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.contact-table tr:last-child td {
+    border-bottom: none;
+}
+
+.role-badge {
+    display: inline-block;
+    background: #6c63ff;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+}
+.contact-page {
+    min-height: auto;
+}
+.contact-page .input-container {
+    padding: 6px 28px 34px;
+}
+
+.contact-page .contact-card {
+    padding-top: 20px;
+}
+
+.contact-page .input-title,
+.contact-page .contact-main-title {
+    margin: 0 0 18px;
+}

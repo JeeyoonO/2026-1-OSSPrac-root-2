@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>비상 연락망</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
 </head>
 <body>
 <div class="page contact-page">
@@ -22,13 +23,13 @@
     </header>
 
     <div class="input-container">
-        <h1 class="input-title">비상 연락망</h1>
+    <section class="contact-card">
+        <h1 class="contact-main-title">비상 연락망</h1>
 
-        <section class="contact-card">
-            <div class="contact-title-box">
-                <h2>ROOT Team Contact</h2>
-                <p>팀 프로젝트 진행 중 긴급 상황 발생 시 확인하는 연락망입니다.</p>
-            </div>
+        <div class="contact-title-box">
+            <h2>ROOT Team Contact</h2>
+            <p>팀 프로젝트 진행 중 긴급 상황 발생 시 확인하는 연락망입니다.</p>
+        </div>
 
             <div class="contact-table-wrap">
                 <table class="contact-table">
