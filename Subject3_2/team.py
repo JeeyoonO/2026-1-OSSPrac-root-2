@@ -93,8 +93,7 @@ def save_uploaded_file(file, default_path):
 
     os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
-    original_filename = secure_filename(file.filename)
-    ext = original_filename.rsplit(".", 1)[1].lower()
+    ext = file.filename.rsplit(".", 1)[1].lower()
     new_filename = f"{uuid.uuid4().hex}.{ext}"
 
     save_path = os.path.join(app.config["UPLOAD_FOLDER"], new_filename)
