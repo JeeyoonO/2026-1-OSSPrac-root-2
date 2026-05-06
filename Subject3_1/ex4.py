@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
@@ -8,6 +8,9 @@ def input_page():
 
 @app.route('/result', methods=['POST', 'GET'])
 def result():
+    if request.method == 'GET':
+        return redirect(url_for('input_page'))
+
     if request.method == 'POST':
         result = dict()
         result['Name'] = request.form.get('name')
