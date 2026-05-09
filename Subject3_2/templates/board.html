@@ -2,16 +2,39 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>임시 게시판</title>
+    <title>ROOT 게시판</title>
 </head>
 <body>
-    <h1>여기는 임시 게시판 목록입니다</h1>
-    
-    <!-- 파이썬에서 넘겨준 posts 데이터를 화면에 찍어보는 곳 -->
-    <ul>
-        {% for post in posts %}
-            <li>제목: {{ post.title }} / 작성자: {{ post.author }}</li>
-        {% endfor %}
-    </ul>
+    <h1>ROOT 팀 질문게시판</h1>
+
+    <a href="/board/write">글쓰기</a>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>작성일</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+            <tr>
+                <td>{{ post.id }}</td>
+                <td>
+                    <!-- 제목 클릭 시 상세 페이지로 이동 -->
+                    <a href="/board/{{ post.id }}">{{ post.title }}</a>
+                </td>
+                <td>{{ post.author }}</td>
+                <td>{{ post.date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if not posts %}
+    <p>아직 작성된 게시글이 없습니다.</p>
+    {% endif %}
 </body>
 </html>
