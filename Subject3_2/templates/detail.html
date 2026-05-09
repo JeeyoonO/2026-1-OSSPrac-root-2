@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ post.title }} - ROOT</title>
+</head>
+<body>
+    <!-- 1. 상단 버튼 (이전/다음/목록) -->
+    <div style="text-align: right;">
+        {% if prev_id %}<a href="/board/{{ prev_id }}">^ 이전글</a>{% endif %}
+        {% if next_id %}<a href="/board/{{ next_id }}">v 다음글</a>{% endif %}
+        <a href="/board">목록</a>
+    </div>
+
+    <hr>
+
+    <!-- 2. 게시글 본문 -->
+    <article>
+        <h2>{{ post.title }}</h2>
+        <p><strong>작성자:</strong> {{ post.author }} | <strong>날짜:</strong> {{ post.date }}</p>
+        <div style="border: 1px solid #000; padding: 20px; margin: 20px 0;">
+            {{ post.content | replace('\n', '<br>') | safe }}
+        </div>
+    </article>
+
+    <hr>
+
+    <!-- 3. 댓글 목록 -->
+    <section>
+        <h4>댓글 목록</h4>
+        {% for comment in comments %}
+            <div style="border-bottom: 1px solid #eee; padding: 10px;">
+                <strong>{{ comment.author }}</strong>: {{ comment.content }} 
+                <small style="color: #888;">({{ comment.date }})</small>
+            </div>
+        {% else %}
+            <p>아직 댓글이 없습니다.</p>
+        {% endfor %}
+    </section>
+
+    <hr>
+
+    <!-- 4. 댓글 작성 (비밀번호 4자리 포함) -->
+    <section>
+        <form action="/board/{{ post.id }}/comments" method="POST">
+            <input type="text" name="author" placeholder="작성자" required>
+            <input type="password" name="password" placeholder="비밀번호(4자리)" maxlength="4" pattern="\d{4}" required>
+            <br>
+            <textarea name="content" placeholder="댓글을 남겨보세요." rows="3" style="width: 100%;" required></textarea>
+            <br>
+            <button type="submit">댓글 등록</button>
+        </form>
+    </section>
+</body>
+</html>

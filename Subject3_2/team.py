@@ -403,6 +403,39 @@ def board_write():
     
     else:
         return render_template('write.html')
+    
+@app.route('/board/<int:post_id>')
+def board_detail(post_id):
+    # 1. 게시글 데이터 가져오기
+    with open('data/posts.json', 'r', encoding='utf-8') as f:
+        posts = json.load(f)
+    
+    # 현재 게시글 찾기
+    post = next((p for p in posts if p['id'] == post_id), None)
+    if not post:
+        abort(404)
+
+    # 이전글/다음글 계산 (인덱스 활용)
+    curr_idx = posts.index(post)
+    prev_post = posts[curr_idx - 1] if curr_idx > 0 else None
+    next_post = posts[curr_idx + 1] if curr_idx < len(posts) - 1 else None
+
+    # 2. 댓글 데이터 가져와서 필터링 (post_id가 일치하는 것만)
+    # comments.json 파일이 없으면 빈 리스트로 시작하도록 예외 처리
+    try:
+        with open('data/comments.json', 'r', encoding='utf-8') as f:
+            all_comments = json.load(f)
+    except FileNotFoundError:
+        all_comments = []
+    
+    # 이 게시글에 달린 댓글만 골라내기 (데이터 사이언스의 Filtering!)
+    post_comments = [c for c in all_comments if c['post_id'] == post_id]
+
+    return render_template('detail.html', 
+                           post=post, 
+                           comments=post_comments,
+                           prev_id=prev_post['id'] if prev_post else None,
+                           next_id=next_post['id'] if next_post else None)
 
 if __name__ == "__main__":
     app.run(debug=True)
