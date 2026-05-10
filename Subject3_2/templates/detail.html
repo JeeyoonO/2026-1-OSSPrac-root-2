@@ -38,15 +38,10 @@
                 {{ post.content | replace('\n', '<br>') | safe }}
             </div>
 
-            <div style="text-align: right; margin-bottom: 20px;">
+            <div style="text-align: right; margin-top: 20px;">
                 <a href="/board/{{ post.id }}/edit">
-                    <button type="button">글 수정하기</button>
+                    <button type="button">게시글 관리</button>
                 </a>
-
-                <a href="/board/{{ post.id }}/delete">
-                    <button type="button">글 삭제하기</button>
-                </a>
-                
             </div>
 
         </article>

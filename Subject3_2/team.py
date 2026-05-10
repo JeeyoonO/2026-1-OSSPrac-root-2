@@ -477,5 +477,34 @@ def board_edit(post_id):
     # GET 요청 시: 기존 데이터를 담아서 수정 폼(edit.html)을 보여줌
     return render_template('write.html', post=post)
 
+@app.route('/board/<int:post_id>/delete', methods=['POST'])
+def board_delete(post_id):
+    # 1. 사용자가 입력한 비밀번호 가져오기
+    input_pw = request.form.get('password', '').strip()
+
+    # 2. JSON 데이터 읽기
+    with open('data/posts.json', 'r', encoding='utf-8') as f:
+        posts = json.load(f)
+    
+    # 3. 해당 게시글 찾기
+    post = next((p for p in posts if p['id'] == post_id), None)
+    
+    if not post:
+        abort(404)
+
+    # 4. 비밀번호 검증 (설계하신 핵심 보안!)
+    if input_pw == post['password']:
+        # 데이터 삭제 (리스트에서 제거)
+        posts.remove(post)
+        
+        # 5. 변경된 리스트 저장
+        with open('data/posts.json', 'w', encoding='utf-8') as f:
+            json.dump(posts, f, indent=2, ensure_ascii=False)
+            
+        return redirect('/board') # 삭제 후 목록으로 이동
+    else:
+        # 비번 틀리면 다시 이전 화면(수정 페이지)으로
+        return "<script>alert('비밀번호가 틀렸습니다. 다시 확인해주세요.'); history.back();</script>"
+
 if __name__ == "__main__":
     app.run(debug=True)

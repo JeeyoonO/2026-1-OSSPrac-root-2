@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>{% if post %}글 수정하기{% else %}글 쓰기{% endif %} - ROOT</title>
+    <title>{% if post %}게시글 수정{% else %}새 글 작성{% endif %} - ROOT</title>
 </head>
 <body>
     <h2>{% if post %}게시글 수정{% else %}새 글 작성{% endif %}</h2>
@@ -28,7 +28,7 @@
             <label>비밀번호(4자리): </label><br>
             <input type="password" name="password" placeholder="숫자 4자리" maxlength="4" pattern="\d{4}" required>
             <small style="color: gray;">
-                {% if post %}수정을 위해 기존 비밀번호를 입력하세요.{% else %}글 관리를 위한 비밀번호를 설정하세요.{% endif %}
+                {% if post %}수정/삭제를 위해 기존 비밀번호를 입력하세요.{% else %}관리용 비밀번호를 설정하세요.{% endif %}
             </small>
         </p>
 
@@ -38,8 +38,21 @@
         </p>
 
         <hr>
-        <button type="submit">{% if post %}수정 완료{% else %}등록하기{% endif %}</button>
-        <a href="javascript:history.back()"><button type="button">취소</button></a>
+        <button type="submit">
+            {% if post %}수정 완료{% else %}등록하기{% endif %}
+        </button>
+
+        {% if post %}
+        <button type="submit" 
+                formaction="/board/{{ post.id }}/delete" 
+                onclick="return confirm('정말 삭제하시겠습니까?')">
+            이 게시글 삭제하기
+        </button>
+        {% endif %}
+
+        <a href="javascript:history.back()">
+            <button type="button">취소</button>
+        </a>
     </form>
 </body>
 </html>
