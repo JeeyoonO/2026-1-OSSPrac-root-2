@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/member_detail.css') }}">
 </head>
-<body>
+<body class="{% if not is_root_member %}generated-page{% endif %}">
 <div class="page">
 
     <header class="navbar">
@@ -18,6 +18,9 @@
             <a href="/community">커뮤니티</a>
             <a href="/input" class="{% if not is_root_member %}active{% endif %}">팀페이지 제작</a>
             <a href="/contact">Contact</a>
+                    <button id="darkModeBtn" class="dark-mode-btn" type="button">
+                        🌙
+                    </button>
             </nav>
         </div>
     </header>
@@ -26,9 +29,6 @@
 
         {% if not is_root_member %}
         <div class="detail-toolbar">
-            <button type="button" class="small-btn purple pdf-save-btn" onclick="window.print()">
-                PDF로 저장
-            </button>
         </div>
         {% endif %}
 
@@ -86,19 +86,68 @@
             </div>
         </section>
 
-        <section class="link-box-wrap">
-            <a href="{{ member.github }}" class="link-box" target="_blank">
-                <img src="{{ url_for('static', filename='images/github.png') }}" class="link-icon">
-                <strong>GitHub</strong>
-                <span class="link-handle">{{ member.github | replace('https://github.com/', '@') }}</span>
-            </a>
+<section class="link-box-wrap">
 
-            <a href="{{ member.sns }}" class="link-box" target="_blank">
-                <img src="{{ url_for('static', filename='images/instagram.png') }}" class="link-icon">
-                <strong>Instagram</strong>
-                <span class="link-handle">{{ member.sns | replace('https://instagram.com/', '@') }}</span>
-            </a>
-        </section>
+    {% if member.github %}
+    <a href="{{ member.github }}"
+       class="link-box"
+       target="_blank">
+
+        <img src="{{ url_for('static', filename='images/github.png') }}"
+             class="link-icon">
+
+        <strong>GitHub</strong>
+
+        <span class="link-handle">
+            {{ member.github | replace('https://github.com/', '@') }}
+        </span>
+    </a>
+
+    {% else %}
+    <div class="link-box disabled-link-box">
+
+        <img src="{{ url_for('static', filename='images/github.png') }}"
+             class="link-icon">
+
+        <strong>GitHub</strong>
+
+        <span class="link-handle">
+            GitHub 아이디를 입력하지 않았습니다.
+        </span>
+    </div>
+    {% endif %}
+
+
+    {% if member.sns %}
+    <a href="{{ member.sns }}"
+       class="link-box"
+       target="_blank">
+
+        <img src="{{ url_for('static', filename='images/instagram.png') }}"
+             class="link-icon">
+
+        <strong>Instagram</strong>
+
+        <span class="link-handle">
+            {{ member.sns | replace('https://instagram.com/', '@') }}
+        </span>
+    </a>
+
+    {% else %}
+    <div class="link-box disabled-link-box">
+
+        <img src="{{ url_for('static', filename='images/instagram.png') }}"
+             class="link-icon">
+
+        <strong>Instagram</strong>
+
+        <span class="link-handle">
+            Instagram 아이디를 입력하지 않았습니다.
+        </span>
+    </div>
+    {% endif %}
+
+</section>
 
         <section class="portfolio-section">
             <div class="portfolio-section-header">
@@ -145,5 +194,26 @@
 
     </div>
 </div>
+<script>
+    const darkModeBtn = document.getElementById("darkModeBtn");
+
+    // 페이지가 열릴 때 저장된 다크모드 상태 적용
+    if (localStorage.getItem("darkMode") === "on") {
+        document.body.classList.add("dark-mode");
+        darkModeBtn.textContent = "☀️";
+    }
+
+    darkModeBtn.addEventListener("click", function () {
+        document.body.classList.toggle("dark-mode");
+
+        if (document.body.classList.contains("dark-mode")) {
+            localStorage.setItem("darkMode", "on");
+            darkModeBtn.textContent = "☀️";
+        } else {
+            localStorage.setItem("darkMode", "off");
+            darkModeBtn.textContent = "🌙";
+        }
+    });
+</script>
 </body>
 </html>

@@ -2,25 +2,23 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     background: #f3f5fb;
-    display: flex;
-    justify-content: center;
-    padding: 8px 0;
+    padding: 0;
 }
 
 /* 전체를 하나의 카드처럼 */
 .page {
-    width: 600px;
-    min-height: 800px;
+    width: 100%;
+    min-height: 100vh;
     background: white;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    border-radius: 0;
+    box-shadow: none;
     overflow: hidden;
 }
 
 /* 네비게이션 */
 .navbar {
-    padding: 0 24px;
-    height: 60px;
+    padding: 0;
+    height: 74px;
     display: flex;
     align-items: center;
     background: white;
@@ -31,13 +29,16 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     width: 100%;
+    padding: 0 64px;
+    box-sizing: border-box;
 }
 
 .logo {
     color: #000;
-    font-weight: 800;
-    font-size: 18px;
+    font-weight: 900;
+    font-size: 32px;
     text-decoration: none;
 }
 
@@ -49,7 +50,7 @@ body {
 .nav-menu a {
     text-decoration: none;
     color: #555;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 600;
     height: 60px;
     display: flex;
@@ -60,10 +61,117 @@ body {
     color: #6c63ff;
     border-bottom: 3px solid #6c63ff;
 }
+/*드롭다운*/
+.nav-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
 
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    min-width: 115px;
+    background: #ffffff;
+    border: 1px solid #e8e5ff;
+    border-radius: 10px;
+    box-shadow: 0 8px 22px rgba(108, 99, 255, 0.14);
+    padding: 6px;
+    z-index: 1000;
+}
+
+.nav-dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 8px 10px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #333 !important;
+    text-align: left;
+    text-decoration: none;
+    line-height: 1.2;
+}
+
+.dropdown-menu a:hover {
+    background: #f1efff;
+    color: #6c63ff !important;
+}
+
+/* 다크모드 */
+body.dark-mode .dropdown-menu {
+    background: #252532;
+    border: 1px solid #3b3b4a;
+}
+
+body.dark-mode .dropdown-menu a {
+    color: #f5f5f5 !important;
+}
+
+body.dark-mode .dropdown-menu a:hover {
+    background: rgba(124, 108, 255, 0.18);
+    color: #c9c3ff !important;
+}
+
+/* 다크모드 */
+body.dark-mode .dropdown-menu {
+    background: #252532;
+    border: 1px solid #3b3b4a;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+}
+
+body.dark-mode .dropdown-menu a {
+    color: #f5f5f5 !important;
+}
+
+body.dark-mode .dropdown-menu a:hover {
+    background: rgba(124, 108, 255, 0.18);
+    color: #c9c3ff !important;
+}
+/* 드롭다운 안 링크는 nav active 스타일 영향 제거 */
+.nav-menu .dropdown-menu a,
+.nav-menu .dropdown-menu a.active {
+    display: block;
+    padding: 8px 10px !important;
+    height: auto !important;
+    line-height: 1.2 !important;
+    border-bottom: none !important;
+    background: transparent !important;
+    color: #333 !important;
+}
+
+.nav-menu .dropdown-menu a:hover {
+    background: #f1efff !important;
+    color: #6c63ff !important;
+}
+
+/* 드롭다운 박스 크기 고정 */
+.dropdown-menu {
+    min-width: 110px !important;
+    padding: 6px !important;
+}
+
+body.dark-mode .nav-menu .dropdown-menu a,
+body.dark-mode .nav-menu .dropdown-menu a.active {
+    color: #f5f5f5 !important;
+    background: transparent !important;
+    border-bottom: none !important;
+}
+
+body.dark-mode .nav-menu .dropdown-menu a:hover {
+    background: rgba(124, 108, 255, 0.18) !important;
+    color: #c9c3ff !important;
+}
 /* 메인 */
 .container {
-    padding: 22px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px;
 }
 
 .card {
@@ -73,7 +181,298 @@ body {
     padding: 0;
     margin-bottom: 32px;
 }
-/*커뮤니티 숨기기*/
-.nav-menu a[href="/community"] {
-    display: none;
+
+.dark-mode-btn {
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 18px;
+    padding: 6px 8px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.dark-mode-btn:hover {
+    background-color: #f1efff;
+    transform: scale(1.08);
+}
+/* =========================
+   DARK MODE
+========================= */
+
+body.dark-mode {
+    background: #15151c;
+    color: #f5f5f5;
+}
+
+body.dark-mode .page,
+body.dark-mode .container,
+body.dark-mode .input-container,
+body.dark-mode .detail-container {
+    background: #17171f !important;
+}
+
+/* navbar */
+body.dark-mode .navbar {
+    background: #17171b;
+    border-bottom: 1px solid #292933;
+}
+
+body.dark-mode .logo,
+body.dark-mode .nav-menu a {
+    color: #e5e5e5;
+}
+
+body.dark-mode .nav-menu a.active {
+    color: #8b7cff;
+    border-bottom-color: #8b7cff;
+}
+
+/* 공통 큰 카드 */
+body.dark-mode .team-card,
+body.dark-mode .member-card,
+body.dark-mode .team-video-section,
+body.dark-mode .result-hero,
+body.dark-mode .form-card,
+body.dark-mode .profile-detail-card,
+body.dark-mode .portfolio-section,
+body.dark-mode .contact-card {
+    background: #1d1d26 !important;
+    border: 1px solid #343444 !important;
+    color: #f5f5f5 !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* 제목/본문 */
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode label,
+body.dark-mode .team-desc,
+body.dark-mode .video-title,
+body.dark-mode .video-subtitle,
+body.dark-mode .result-text h1,
+body.dark-mode .result-text .team-desc,
+body.dark-mode .contact-main-title,
+body.dark-mode .contact-title-box h2,
+body.dark-mode .contact-title-box p {
+    color: #f5f5f5 !important;
+}
+
+/* 뱃지 */
+body.dark-mode .team-label,
+body.dark-mode .result-badge,
+body.dark-mode .role-badge {
+    background: rgba(124, 108, 255, 0.18) !important;
+    color: #c9c3ff !important;
+}
+
+/* index/result 팀원 개별 카드 */
+body.dark-mode .member {
+    background: linear-gradient(180deg, #ffffff 0%, #eef1ff 100%) !important;
+    border: 1px solid #e5e1ff !important;
+}
+
+body.dark-mode .member-name {
+    color: #111 !important;
+}
+
+body.dark-mode .member-role {
+    color: #555 !important;
+}
+
+/* input 입력창 */
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+    background: #252532 !important;
+    color: #f5f5f5 !important;
+    border: 1px solid #3b3b4a !important;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+    color: #9a9aaa !important;
+}
+
+/* input 라디오/체크박스 */
+body.dark-mode .radio-row label,
+body.dark-mode .language-row label,
+body.dark-mode .etc-language {
+    background: #252532 !important;
+    border: 1px solid #3b3b4a !important;
+    color: #f5f5f5 !important;
+}
+
+body.dark-mode input[type="radio"],
+body.dark-mode input[type="checkbox"] {
+    accent-color: #7c6cff;
+}
+
+/* 파일 업로드 */
+body.dark-mode input[type="file"] {
+    background: #252532 !important;
+    color: #f5f5f5 !important;
+    border: 1px dashed #5f55cc !important;
+}
+
+body.dark-mode input[type="file"]::file-selector-button {
+    background: #6c63ff;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    margin-right: 12px;
+    cursor: pointer;
+}
+
+/* 포트폴리오 입력 박스 */
+body.dark-mode .portfolio-form {
+    background: #252532 !important;
+    border: 1px solid #3b3b4a !important;
+    color: #f5f5f5 !important;
+}
+
+body.dark-mode .portfolio-form strong,
+body.dark-mode .portfolio-date-row span {
+    color: #f5f5f5 !important;
+}
+
+/* 상세페이지 정보 줄 */
+body.dark-mode .info-row {
+    background: #252532 !important;
+    border: 1px solid #3b3b4a !important;
+}
+
+body.dark-mode .info-row span {
+    color: #c9c3ff !important;
+}
+
+body.dark-mode .info-row p {
+    color: #f5f5f5 !important;
+}
+
+/* GitHub / Instagram 카드 */
+body.dark-mode .link-box {
+    background: #ffffff !important;
+    border: 1px solid #e5e1ff !important;
+}
+
+body.dark-mode .link-box strong,
+body.dark-mode .link-box span {
+    color: #111 !important;
+}
+
+/* 표 */
+body.dark-mode .portfolio-table th,
+body.dark-mode .contact-table th {
+    background: #252532 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .portfolio-table td,
+body.dark-mode .contact-table td {
+    background: #1d1d26 !important;
+    color: #f5f5f5 !important;
+    border-color: #3b3b4a !important;
+}
+
+/* 버튼 */
+body.dark-mode button,
+body.dark-mode .btn-purple,
+body.dark-mode .btn-outline,
+body.dark-mode .portfolio-add-btn,
+body.dark-mode .portfolio-remove-btn,
+body.dark-mode .small-btn,
+body.dark-mode .portfolio-resource-btn {
+    background: #6c63ff !important;
+    color: white !important;
+    border: none !important;
+}
+
+body.dark-mode .btn-light {
+    background: #252532 !important;
+    color: #f5f5f5 !important;
+    border: 1px solid #3b3b4a !important;
+}
+/* 팀원 카드 자체 다크모드 */
+body.dark-mode .member {
+    background: #23232d !important;
+    border: 1px solid #343444 !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35) !important;
+}
+
+/* 카드 안 이름/역할 */
+body.dark-mode .member-name {
+    color: #ffffff !important;
+}
+
+body.dark-mode .member-role {
+    color: #b8b8c9 !important;
+}
+
+/* 프로필 이미지 영역 */
+body.dark-mode .profile {
+    background-color: #2a2a36 !important;
+}
+/* member detail SNS 카드 */
+body.dark-mode .link-box {
+    background: #23232d !important;
+    border: 1px solid #343444 !important;
+    color: #f5f5f5 !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+
+body.dark-mode .link-box strong,
+body.dark-mode .link-box span,
+body.dark-mode .link-handle {
+    color: #f5f5f5 !important;
+}
+/* 2번째 팀원 정보 뱃지 */
+body.dark-mode .form-card h2 {
+    display: inline-block;
+    background: rgba(124, 108, 255, 0.18) !important;
+    color: #c9c3ff !important;
+    padding: 10px 18px;
+    border-radius: 999px;
+}
+/* 파일 업로드 감싸는 박스 */
+body.dark-mode .file-row {
+    background: #252532 !important;
+    border: 1px dashed #5f55cc !important;
+    border-radius: 12px;
+    padding: 10px;
+}
+
+/* 실제 file input은 배경 제거 */
+body.dark-mode .file-row input[type="file"] {
+    background: transparent !important;
+    border: none !important;
+    color: #f5f5f5 !important;
+    padding: 0 !important;
+    width: 100%;
+}
+
+/* 파일 선택 버튼 */
+body.dark-mode .file-row input[type="file"]::file-selector-button {
+    background: #6c63ff !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 8px;
+    padding: 8px 14px;
+    margin-right: 12px;
+    cursor: pointer;
+}
+/* contact 제목 뱃지 */
+body.dark-mode .contact-title-box h2 {
+    background: rgba(124, 108, 255, 0.22) !important;
+    color: #c9c3ff !important;
+    border: 1px solid rgba(124, 108, 255, 0.35);
+}
+
+/* 혹시 내부 span까지 흰색 먹는 경우 방지 */
+body.dark-mode .contact-title-box h2 * {
+    color: #c9c3ff !important;
 }

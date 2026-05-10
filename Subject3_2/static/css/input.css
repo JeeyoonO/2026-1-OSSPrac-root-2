@@ -1,18 +1,23 @@
 /* 팀페이지 제작 */
 .input-container {
-    padding: 28px;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 28px 32px;
+    background:
+        radial-gradient(circle at top right, rgba(108, 99, 255, 0.13), transparent 260px),
+        radial-gradient(circle at bottom left, rgba(108, 99, 255, 0.10), transparent 260px);
 }
 
 .input-title {
     text-align: center;
     font-size: 28px;
-    margin: 22px 0 26px;
+    margin: 10px 0 22px;
 }
 
 .form-card {
     border: 1px solid #eee;
     border-radius: 18px;
-    padding: 24px;
+    padding: 20px;
     margin-bottom: 24px;
     box-shadow: 0 4px 14px rgba(0,0,0,0.07);
 }
@@ -35,10 +40,10 @@
 .form-card textarea {
     width: 100%;
     box-sizing: border-box;
-    padding: 11px 12px;
+    padding: 10px 12px;
     border: 1px solid #ddd;
     border-radius: 9px;
-    font-size: 14px;
+    font-size: 13px;
     outline: none;
 }
 
@@ -106,7 +111,7 @@
 .form-buttons {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
+    gap: 8px;
     margin-top: 12px;
 }
 
@@ -243,6 +248,12 @@
     width: 100%;
     margin-top: 12px;
     padding: 11px 14px;
+    transition: all 0.2s ease;
+}
+.portfolio-add-btn:hover {
+    background: #6c63ff;
+    color: white;
+    transform: translateY(-1px);
 }
 
 .portfolio-remove-btn {
@@ -282,4 +293,343 @@
 .portfolio-form textarea {
     height: 90px;
     resize: none;
+}
+.result-hero {
+    max-width: 1200px;
+    margin: 70px auto 80px;
+    padding: 54px;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 56px;
+
+    background: rgba(255,255,255,0.68);
+    border: 1px solid rgba(108,99,255,0.1);
+    border-radius: 36px;
+
+    box-shadow: 0 24px 70px rgba(108,99,255,0.1);
+    backdrop-filter: blur(16px);
+}
+
+.result-text h1 {
+    font-size: 56px;
+    margin-bottom: 24px;
+}
+
+.result-badge {
+    display: inline-block;
+
+    padding: 8px 16px;
+    margin-bottom: 18px;
+
+    border-radius: 999px;
+
+    background: rgba(108,99,255,0.1);
+
+    color: #6c63ff;
+
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+}
+/*파일 취소*/
+.file-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.file-row input[type="file"] {
+    flex: 1;
+}
+
+.file-clear-btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    background: #e9e7ff;
+    color: #5b55d6;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.file-clear-btn:hover {
+    background: #dcd8ff;
+}
+
+body.dark-mode .file-clear-btn {
+    background: #3b3b4a !important;
+    color: #f5f5f5 !important;
+}
+.print-all-area {
+    display: none;
+}
+
+@media print {
+    @page {
+        size: A4;
+        margin: 12mm;
+    }
+
+    /* 기존 화면 전부 숨김 */
+    body * {
+        visibility: hidden !important;
+    }
+
+    /* PDF 전용 영역만 보임 */
+    .print-all-area,
+    .print-all-area * {
+        visibility: visible !important;
+    }
+
+    .print-all-area {
+        display: block !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: white !important;
+    }
+
+    .navbar,
+    .result-hero,
+    .member-card,
+    .form-buttons,
+    .form-buttons *,
+    button {
+        display: none !important;
+    }
+
+    body,
+    .page,
+    .container {
+        background: white !important;
+        color: #111 !important;
+        box-shadow: none !important;
+    }
+
+    .print-page {
+        min-height: 250mm;
+        padding: 28px;
+        box-sizing: border-box;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        background: #fbfaff !important;
+        page-break-after: always;
+        break-after: page;
+    }
+
+    .print-page:last-child {
+        page-break-after: auto;
+        break-after: auto;
+    }
+
+    .print-badge {
+        display: inline-block;
+        padding: 7px 14px;
+        border-radius: 999px;
+        background: #f1efff !important;
+        color: #6c63ff !important;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        margin-bottom: 14px;
+    }
+
+    .print-page h1 {
+        font-size: 34px;
+        margin: 0 0 14px;
+        color: #111 !important;
+    }
+
+    .print-page h2 {
+        font-size: 24px;
+        margin: 30px 0 14px;
+        color: #111 !important;
+    }
+
+    .print-intro {
+        font-size: 14px;
+        line-height: 1.8;
+        color: #333 !important;
+        margin-bottom: 20px;
+    }
+
+    .print-cover-img {
+        width: 100%;
+        max-height: 250px;
+        object-fit: cover;
+        border-radius: 18px;
+        margin: 12px 0 22px;
+    }
+
+    .print-member-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+
+    .print-member-mini {
+        border: 1px solid #ddd;
+        border-radius: 16px;
+        padding: 14px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: white !important;
+    }
+
+    .print-member-mini img {
+        width: 70px;
+        height: 70px;
+        object-fit: contain;
+    }
+
+    .print-profile-card {
+        display: flex;
+        gap: 32px;
+        align-items: center;
+        border: 1px solid #ddd;
+        border-radius: 18px;
+        padding: 22px;
+        background: white !important;
+    }
+
+    .print-profile-img {
+        width: 180px;
+        height: 180px;
+        object-fit: contain;
+        border-radius: 16px;
+    }
+
+    .print-info-list p {
+        display: grid;
+        grid-template-columns: 90px 1fr;
+        margin: 8px 0;
+        font-size: 13px;
+        color: #111 !important;
+    }
+
+    .print-info-list b {
+        color: #4f46e5 !important;
+    }
+
+    .print-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+        margin-top: 12px;
+        background: white !important;
+    }
+
+    .print-table th,
+    .print-table td {
+        border: 1px solid #aaa;
+        padding: 9px;
+        color: #111 !important;
+    }
+
+    .print-table th {
+        background: #f1efff !important;
+    }
+     .print-page {
+        background:
+            radial-gradient(circle at top right, rgba(108, 99, 255, 0.16), transparent 230px),
+            linear-gradient(180deg, #ffffff 0%, #fbfaff 100%) !important;
+        border: 1px solid #d9d5ff !important;
+        box-shadow: 0 10px 28px rgba(108, 99, 255, 0.12) !important;
+    }
+
+    .print-cover h1 {
+        font-size: 44px !important;
+        letter-spacing: 2px;
+        margin: 16px 0 22px !important;
+    }
+
+    .print-cover-img {
+        box-shadow: 0 14px 30px rgba(0,0,0,0.16);
+    }
+
+    .print-member-mini {
+        box-shadow: 0 8px 20px rgba(108, 99, 255, 0.10);
+    }
+
+    .print-member-mini strong {
+        font-size: 16px !important;
+    }
+
+    .print-member-mini span {
+        color: #6c63ff !important;
+        font-weight: 700;
+    }
+
+    .print-profile-card {
+        box-shadow: 0 10px 24px rgba(108, 99, 255, 0.10);
+    }
+
+    .print-page h2 {
+        border-left: 6px solid #6c63ff;
+        padding-left: 12px;
+    }
+}
+/* result 페이지 버튼 위치 */
+.result-hero + .member-card {
+    margin-bottom: 24px;
+}
+
+.result-hero + .member-card + .form-buttons {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 10px;
+    margin: 24px auto 60px;
+}
+/*AI 생성 입력*/
+/* 업로드 섹션 제목 */
+/* 기본 = 라이트모드 */
+.sketch-ai-input {
+    width: 100%;
+    min-height: 90px;
+
+    background: #ffffff;
+    color: #222;
+
+    border: 1px solid #d9d7ff;
+    border-radius: 12px;
+
+    padding: 14px;
+
+    resize: vertical;
+
+    font-size: 14px;
+    line-height: 1.7;
+
+    box-sizing: border-box;
+    outline: none;
+
+    transition: 0.2s;
+}
+
+/* 포커스 */
+.sketch-ai-input:focus {
+    border-color: #6c63ff;
+    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15);
+}
+
+/* 라이트모드 placeholder */
+.sketch-ai-input::placeholder {
+    color: #888;
+}
+
+/* 다크모드 */
+body.dark-mode .sketch-ai-input {
+    background: #232338;
+    color: #f5f5f5;
+    border: 1px solid #3d3d5c;
+}
+
+/* 다크모드 placeholder */
+body.dark-mode .sketch-ai-input::placeholder {
+    color: #a9a9c8;
 }

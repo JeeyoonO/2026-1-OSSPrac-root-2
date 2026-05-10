@@ -18,6 +18,9 @@
                 <a href="/community">커뮤니티</a>
                 <a href="{{ url_for('input_page') }}" class="active">팀페이지 제작</a>
                 <a href="/contact">Contact</a>
+                    <button id="darkModeBtn" class="dark-mode-btn" type="button">
+                        🌙
+                    </button>
             </nav>
         </div>
     </header>
@@ -51,10 +54,25 @@
                 <label>팀 한 줄 소개</label>
                 <input type="text" name="team_intro" placeholder="팀 소개를 입력하세요">
 
-                <label>팀 대표 사진</label>
-                <div class="file-row">
-                    <input type="file" name="team_image">
+            <label>팀 대표 사진</label>
+
+            <div class="sketch-upload-box">
+                <div class="sketch-upload-top">
+
+                    <input type="file" name="team_image" class="sketch-file-input">
+
+                    <button type="button" class="file-clear-btn sketch-cancel-btn">
+                        취소
+                    </button>
                 </div>
+
+                <textarea
+                    class="sketch-ai-input"
+                    name="team_prompt"
+                    placeholder="AI로 팀 대표 사진을 생성하고 싶다면 팀의 특징을 입력해주세요.
+                예) 보라색 분위기, 개발자 팀, 나무 뿌리 로고, 미래적인 느낌, ROOT 팀 감성"></textarea>
+            </div>
+
             </section>
             {% endif %}
 
@@ -130,9 +148,24 @@
                 </div>
 
                 <label>프로필 사진</label>
-                <div class="file-row">
-                    <input type="file" name="profile_image">
-                </div>
+
+                <div class="sketch-upload-box">
+                    <div class="sketch-upload-top">
+
+                        <input type="file" name="image" class="sketch-file-input">
+
+                        <button type="button" class="file-clear-btn sketch-cancel-btn">
+                            취소
+                        </button>
+                    </div>
+
+                <textarea
+                    class="sketch-ai-input"
+                    name="profile_ai_prompt"
+                    placeholder="AI로 프로필 사진을 생성하고 싶다면 본인의 특징을 입력해주세요.
+
+                예) 안경 쓴 개발자, 보라색 후드, 차분한 분위기, 게임 좋아함"></textarea>
+
                 <label>GitHub 아이디</label>
                     <input type="text" name="github" placeholder="GitHub 아이디 입력" value="{{ member.github|replace('https://github.com/', '') if member else '' }}">
 
@@ -143,12 +176,26 @@
                     <input type="url" name="portfolio_link" placeholder="https://example.com" value="{{ member.portfolio_link if member else '' }}">
 
                 <label>포트폴리오 파일</label>
+
                 <div class="file-row">
                     <input type="file" name="portfolio_file">
+
+                    <button type="button" class="file-clear-btn">
+                        취소
+                    </button>
+
                     {% if member and member.portfolio_file %}
-                    <p class="current-file">현재 파일: {{ member.portfolio_file_name }}</p>
-                    <input type="hidden" name="portfolio_file_path" value="{{ member.portfolio_file }}">
-                    <input type="hidden" name="portfolio_file_name" value="{{ member.portfolio_file_name }}">
+                    <p class="current-file">
+                        현재 파일: {{ member.portfolio_file_name }}
+                    </p>
+
+                    <input type="hidden"
+                        name="portfolio_file_path"
+                        value="{{ member.portfolio_file }}">
+
+                    <input type="hidden"
+                        name="portfolio_file_name"
+                        value="{{ member.portfolio_file_name }}">
                     {% endif %}
                 </div>
 
@@ -278,6 +325,35 @@ if (portfolioList && addPortfolioBtn) {
 
     updatePortfolioHeaders();
 }
+</script>
+<script>
+    const darkModeBtn = document.getElementById("darkModeBtn");
+
+    // 페이지가 열릴 때 저장된 다크모드 상태 적용
+    if (localStorage.getItem("darkMode") === "on") {
+        document.body.classList.add("dark-mode");
+        darkModeBtn.textContent = "☀️";
+    }
+
+    darkModeBtn.addEventListener("click", function () {
+        document.body.classList.toggle("dark-mode");
+
+        if (document.body.classList.contains("dark-mode")) {
+            localStorage.setItem("darkMode", "on");
+            darkModeBtn.textContent = "☀️";
+        } else {
+            localStorage.setItem("darkMode", "off");
+            darkModeBtn.textContent = "🌙";
+        }
+    });
+</script>
+<script>
+document.querySelectorAll(".file-clear-btn").forEach(function(button) {
+    button.addEventListener("click", function() {
+        const fileInput = button.parentElement.querySelector('input[type="file"]');
+        fileInput.value = "";
+    });
+});
 </script>
 </body>
 </html>

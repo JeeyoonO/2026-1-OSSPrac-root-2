@@ -19,23 +19,32 @@
                 <a href="/community">커뮤니티</a>
                 <a href="/input" class="active">팀페이지 제작</a>
                 <a href="/contact">Contact</a>
+                    <button id="darkModeBtn" class="dark-mode-btn" type="button">
+                        🌙
+                    </button>
             </nav>
         </div>
     </header>
 
     <div class="container">
 
-        <div class="card team-card">
-            <div class="team-image"
-                 style="background-image: url('{{ url_for('static', filename=team.team_image) }}');">
-            </div>
+        <section class="result-hero">
 
-            <h1>{{ team.team_name }}</h1>
+    <div class="team-image"
+         style="background-image: url('{{ url_for('static', filename=team.team_image) }}');">
+    </div>
 
-            <p class="team-desc">
-                {{ team.team_intro }}
-            </p>
-        </div>
+    <div class="result-text">
+        <p class="result-badge">GENERATED TEAM PAGE</p>
+
+        <h1>{{ team.team_name }}</h1>
+
+        <p class="team-desc">
+            {{ team.team_intro }}
+        </p>
+    </div>
+
+    </section>
 
         <div class="card member-card">
             <h3>팀원 소개</h3>
@@ -64,17 +73,112 @@
 
         <div class="form-buttons">
             <button type="button" class="btn-light"
-                    onclick="location.href='{{ url_for('input_page') }}'">
-                다시 만들기
+                onclick="location.href='{{ url_for('input_page') }}'">
+            다시 만들기
             </button>
 
             <button type="button" class="btn-purple"
-                    onclick="location.href='{{ url_for('index') }}'">
-                메인으로
+                onclick="location.href='{{ url_for('index') }}'">
+            메인으로
+            </button>
+
+            <button type="button" class="btn-purple" onclick="window.print()">
+            전체 PDF 저장
             </button>
         </div>
+        <section class="print-all-area">
+
+    <div class="print-cover print-page">
+        <p class="print-badge">GENERATED TEAM PAGE</p>
+        <h1>{{ team.team_name }}</h1>
+        <p class="print-intro">{{ team.team_intro }}</p>
+
+        <img src="{{ url_for('static', filename=team.team_image) }}" class="print-cover-img">
+
+        <h2>팀원 소개</h2>
+
+        <div class="print-member-grid">
+            {% for member in members %}
+            <div class="print-member-mini">
+                <img src="{{ url_for('static', filename=member.image) }}">
+                <div>
+                    <strong>{{ member.name }}</strong>
+                    <span>{{ member.role }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% for member in members %}
+    <div class="print-member-page print-page">
+        <p class="print-badge">MEMBER DETAIL</p>
+        <h1>{{ member.name }}</h1>
+
+        <div class="print-profile-card">
+            <img src="{{ url_for('static', filename=member.image) }}" class="print-profile-img">
+
+            <div class="print-info-list">
+                <p><b>학과</b><span>{{ member.major }}</span></p>
+                <p><b>학번</b><span>{{ member.student_number }}</span></p>
+                <p><b>역할</b><span>{{ member.role }}</span></p>
+                <p><b>언어</b><span>{{ member.languages | join(', ') }}</span></p>
+                <p><b>이메일</b><span>{{ member.email }}</span></p>
+                <p><b>전화번호</b><span>{{ member.phone }}</span></p>
+                <p><b>GitHub</b><span>{{ member.github if member.github else '입력하지 않음' }}</span></p>
+                <p><b>Instagram</b><span>{{ member.sns if member.sns else '입력하지 않음' }}</span></p>
+            </div>
+        </div>
+
+        <h2>Portfolio</h2>
+
+        <table class="print-table">
+            <thead>
+                <tr>
+                    <th>프로젝트명</th>
+                    <th>기간</th>
+                    <th>역할</th>
+                    <th>설명</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in member.portfolio %}
+                <tr>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.period }}</td>
+                    <td>{{ item.role }}</td>
+                    <td>{{ item.desc }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endfor %}
+
+</section>
 
     </div>
 </div>
+<script>
+    const darkModeBtn = document.getElementById("darkModeBtn");
+
+    // 페이지가 열릴 때 저장된 다크모드 상태 적용
+    if (localStorage.getItem("darkMode") === "on") {
+        document.body.classList.add("dark-mode");
+        darkModeBtn.textContent = "☀️";
+    }
+
+    darkModeBtn.addEventListener("click", function () {
+        document.body.classList.toggle("dark-mode");
+
+        if (document.body.classList.contains("dark-mode")) {
+            localStorage.setItem("darkMode", "on");
+            darkModeBtn.textContent = "☀️";
+        } else {
+            localStorage.setItem("darkMode", "off");
+            darkModeBtn.textContent = "🌙";
+        }
+    });
+</script>
 </body>
 </html>

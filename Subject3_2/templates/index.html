@@ -14,26 +14,51 @@
                 <a href="{{ url_for('index') }}" class="logo">OSSPrac</a>
 
                 <nav class="nav-menu">
-                    <a href="/" class="active">ROOT팀 소개</a>
+                    <div class="nav-dropdown">
+                        <a href="/" class="active dropdown-main">ROOT팀 소개</a>
+
+                        <div class="dropdown-menu">
+                            <a href="#teamIntro">팀 소개</a>
+                            <a href="#memberIntro">팀원 소개</a>
+                            <a href="#teamVideo">팀 영상</a>
+                        </div>
+                    </div>
                     <a href="/community">커뮤니티</a>
                     <a href="/input">팀페이지 제작</a>
                     <a href="/contact">Contact</a>
+                        <button id="darkModeBtn" class="dark-mode-btn" type="button">
+                            🌙
+                        </button>
                 </nav>
             </div>
         </header>
 
         <div class="container">
 
-            <div class="card team-card">
-                <div class="team-image"></div>
+            <div class="card team-card" id="teamIntro">
 
-                <h1>TEAM ROOT</h1>
-                <p class="team-desc">
-                ROOT 팀은 ‘시작’과 ‘기초’를 의미하는 이름처럼, 웹 개발의 기본부터 탄탄하게 구축하는 것을 목표로 합니다. 각 팀원이 중심이 되어 협력하고, 프로젝트의 뿌리를 단단히 만들어 완성도 높은 결과를 만들어가는 팀입니다.
-                </p>
-            </div>
+    <div class="team-text">
+        <p class="team-label">RELIABLE · OPEN · ORIGIN · TOGETHER</p>
 
-            <div class="card member-card">
+        <h1>
+            기초부터 단단하게,<br>
+            함께 성장하는 ROOT
+        </h1>
+
+        <p class="team-desc">
+            ROOT 팀은 ‘시작’과 ‘기초’를 의미하는 이름처럼,
+            웹 개발의 기본부터 탄탄하게 구축하는 것을 목표로 합니다.
+            각 팀원이 중심이 되어 협력하고, 프로젝트의 뿌리를 단단히 만들어
+            완성도 높은 결과를 만들어가는 팀입니다.
+        </p>
+
+    </div>
+
+    <div class="team-image"></div>
+
+</div>
+
+    <div class="card member-card" id="memberIntro">
     <h3>팀원 소개</h3>
 
     <div class="members">
@@ -62,7 +87,7 @@
         </a>
     </div>
 </div>
-    <section class="team-video-section">
+    <section class="team-video-section" id="teamVideo">
         <p class="video-subtitle">ROOT, We Grow Together</p>
         <h1 class="video-title">
             Reliable · Open · Origin · Together 
@@ -76,6 +101,27 @@
 
         </div>
     </div>
+ <script>
+    const darkModeBtn = document.getElementById("darkModeBtn");
+
+    // 페이지가 열릴 때 저장된 다크모드 상태 적용
+    if (localStorage.getItem("darkMode") === "on") {
+        document.body.classList.add("dark-mode");
+        darkModeBtn.textContent = "☀️";
+    }
+
+    darkModeBtn.addEventListener("click", function () {
+        document.body.classList.toggle("dark-mode");
+
+        if (document.body.classList.contains("dark-mode")) {
+            localStorage.setItem("darkMode", "on");
+            darkModeBtn.textContent = "☀️";
+        } else {
+            localStorage.setItem("darkMode", "off");
+            darkModeBtn.textContent = "🌙";
+        }
+    });
+</script>
 </body>
 </html>
 
