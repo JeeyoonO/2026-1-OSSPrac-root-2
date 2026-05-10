@@ -459,9 +459,23 @@ def board_update():
         
     # 2-2. 삭제 처리
     elif action == 'delete':
+        # 1) 게시글 삭제
         posts.remove(post)
         with open('data/posts.json', 'w', encoding='utf-8') as f:
             json.dump(posts, f, indent=2, ensure_ascii=False)
+
+        # 2) 연쇄 삭제: 해당 게시글에 달린 댓글도 모두 삭제
+        try:
+            with open('data/comments.json', 'r', encoding='utf-8') as f:
+                all_comments = json.load(f)
+            
+            filtered_comments = [c for c in all_comments if c['post_id'] != post_id]
+            
+            with open('data/comments.json', 'w', encoding='utf-8') as f:
+                json.dump(filtered_comments, f, indent=2, ensure_ascii=False)
+        except (FileNotFoundError, json.JSONDecodeError):
+            pass
+
         return redirect('/board')
 
 # 댓글 CRUD =====================================================================
