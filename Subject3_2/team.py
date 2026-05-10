@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, session, abort, request
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
+from datetime import datetime
 import os
 import json
 import uuid
@@ -352,6 +353,199 @@ def contact():
 def reset_team():
     session.pop("generated_team", None)
     return redirect(url_for("input_page"))
+
+# 게시글 CRUD =====================================================================
+
+def get_posts():
+    with open('data/posts.json', 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+@app.route('/board')
+def board_list():
+    posts = get_posts() 
+    posts.reverse()
+    return render_template('board/post_list.html', posts=posts)
+
+@app.route('/board/write')
+def board_write():
+    return render_template('board/post_form.html', post=None)
+
+@app.route('/board/<int:post_id>')
+def board_detail(post_id):
+    with open('data/posts.json', 'r', encoding='utf-8') as f:
+        posts = json.load(f)
+    
+    post = next((p for p in posts if p['id'] == post_id), None)
+    if not post: abort(404)
+
+    curr_idx = posts.index(post)
+    prev_post = posts[curr_idx - 1] if curr_idx > 0 else None
+    next_post = posts[curr_idx + 1] if curr_idx < len(posts) - 1 else None
+
+    try:
+        with open('data/comments.json', 'r', encoding='utf-8') as f:
+            all_comments = json.load(f)
+    except FileNotFoundError:
+        all_comments = []
+    
+    post_comments = [c for c in all_comments if c['post_id'] == post_id]
+
+    return render_template('board/post_detail.html', 
+                           post=post, prev_id=prev_post['id'] if prev_post else None,
+                           next_id=next_post['id'] if next_post else None,
+                           comments=post_comments)
+
+@app.route('/board/<int:post_id>/edit')
+def board_edit(post_id):
+    # 수정 화면 보여주기 (GET)
+    with open('data/posts.json', 'r', encoding='utf-8') as f:
+        posts = json.load(f)
+    post = next((p for p in posts if p['id'] == post_id), None)
+    if not post: abort(404)
+    return render_template('board/post_form.html', post=post)
+
+# 통합된 라우트 1: 게시글 생성/수정/삭제를 한번에 처리
+@app.route('/board/update', methods=['POST'])
+def board_update():
+    action = request.form.get('action', 'add') # add, edit, delete 중 하나
+    post_id = request.form.get('post_id', type=int)
+    input_pw = request.form.get('password', '').strip()
+    current_time = datetime.now().strftime("%Y.%m.%d %H:%M")
+
+    try:
+        with open('data/posts.json', 'r', encoding='utf-8') as f:
+            posts = json.load(f)
+    except FileNotFoundError:
+        posts = []
+
+    # 1. 새 글 작성
+    if action == 'add':
+        title = request.form.get('title', '').strip()
+        author = request.form.get('author', '').strip()
+        content = request.form.get('content', '').strip()
+
+        if not all([title, author, input_pw, content]):
+            return "<script>alert('모든 항목을 입력해야 합니다.'); history.back();</script>"
+        if not (input_pw.isdigit() and len(input_pw) == 4):
+            return "<script>alert('비밀번호는 숫자 4자리여야 합니다.'); history.back();</script>"
+
+        new_post = {
+            "id": posts[-1]['id'] + 1 if posts else 1,
+            "title": title, "author": author, "password": input_pw,
+            "content": content, "date": current_time
+        }
+        posts.append(new_post)
+        with open('data/posts.json', 'w', encoding='utf-8') as f:
+            json.dump(posts, f, indent=2, ensure_ascii=False)
+        return redirect('/board')
+
+    # 2. 수정/삭제 공통 (기존 데이터 검증)
+    post = next((p for p in posts if p['id'] == post_id), None)
+    if not post: abort(404)
+    
+    if str(input_pw) != str(post['password']):
+        return "<script>alert('비밀번호가 일치하지 않습니다.'); history.back();</script>"
+
+    # 2-1. 수정 처리
+    if action == 'edit':
+        new_title = request.form.get('title', '').strip()
+        new_content = request.form.get('content', '').strip()
+        if not new_title or not new_content:
+            return "<script>alert('제목과 내용을 모두 입력해주세요.'); history.back();</script>"
+
+        post['title'] = new_title
+        post['content'] = new_content
+        post['date'] = current_time
+        with open('data/posts.json', 'w', encoding='utf-8') as f:
+            json.dump(posts, f, indent=2, ensure_ascii=False)
+        return redirect(f'/board/{post_id}')
+        
+    # 2-2. 삭제 처리
+    elif action == 'delete':
+        # 1) 게시글 삭제
+        posts.remove(post)
+        with open('data/posts.json', 'w', encoding='utf-8') as f:
+            json.dump(posts, f, indent=2, ensure_ascii=False)
+
+        # 2) 연쇄 삭제: 해당 게시글에 달린 댓글도 모두 삭제
+        try:
+            with open('data/comments.json', 'r', encoding='utf-8') as f:
+                all_comments = json.load(f)
+            
+            filtered_comments = [c for c in all_comments if c['post_id'] != post_id]
+            
+            with open('data/comments.json', 'w', encoding='utf-8') as f:
+                json.dump(filtered_comments, f, indent=2, ensure_ascii=False)
+        except (FileNotFoundError, json.JSONDecodeError):
+            pass
+
+        return redirect('/board')
+
+# 댓글 CRUD =====================================================================
+
+@app.route('/comments/<int:comment_id>/edit')
+def comment_edit_view(comment_id):
+    with open('data/comments.json', 'r', encoding='utf-8') as f:
+        comments = json.load(f)
+    comment = next((c for c in comments if c['id'] == comment_id), None)
+    if not comment: abort(404)
+    return redirect(url_for('board_detail', post_id=comment['post_id'], edit_comment_id=comment_id) + f"#comment-{comment_id}")
+
+# 통합된 라우트 2: 댓글 생성/수정/삭제를 한번에 처리
+@app.route('/comment/update', methods=['POST'])
+def comment_update():
+    action = request.form.get('action', 'add')
+    post_id = request.form.get('post_id', type=int)
+    comment_id = request.form.get('comment_id', type=int)
+    input_pw = request.form.get('password', '').strip()
+    current_time = datetime.now().strftime("%Y.%m.%d %H:%M")
+
+    try:
+        with open('data/comments.json', 'r', encoding='utf-8') as f:
+            comments = json.load(f)
+    except FileNotFoundError:
+        comments = []
+
+    # 1. 새 댓글 작성
+    if action == 'add':
+        author = request.form.get('author', '').strip()
+        content = request.form.get('content', '').strip()
+        if not all([author, input_pw, content]):
+            return "<script>alert('모든 항목을 입력해주세요.'); history.back();</script>"
+
+        new_comment = {
+            "id": int(datetime.now().timestamp() * 1000), "post_id": post_id,
+            "author": author, "password": input_pw, "content": content,
+            "date": current_time
+        }
+        comments.append(new_comment)
+        with open('data/comments.json', 'w', encoding='utf-8') as f:
+            json.dump(comments, f, indent=2, ensure_ascii=False)
+        return redirect(f'/board/{post_id}')
+
+    # 2. 수정/삭제 공통
+    comment = next((c for c in comments if c['id'] == comment_id), None)
+    if not comment: abort(404)
+    if str(input_pw) != str(comment['password']):
+        return "<script>alert('비밀번호가 틀렸습니다.'); history.back();</script>"
+
+    # 2-1. 수정 처리
+    if action == 'edit':
+        comment['author'] = request.form.get('author', '').strip()
+        comment['content'] = request.form.get('content', '').strip()
+        comment['date'] = current_time
+        with open('data/comments.json', 'w', encoding='utf-8') as f:
+            json.dump(comments, f, indent=2, ensure_ascii=False)
+        return redirect(f'/board/{comment["post_id"]}#comment-{comment_id}')
+
+    # 2-2. 삭제 처리
+    elif action == 'delete':
+        target_post_id = comment['post_id']
+        comments.remove(comment)
+        with open('data/comments.json', 'w', encoding='utf-8') as f:
+            json.dump(comments, f, indent=2, ensure_ascii=False)
+        return redirect(f'/board/{target_post_id}')
+
 
 if __name__ == "__main__":
     app.run(debug=True)

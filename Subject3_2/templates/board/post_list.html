@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>ROOT 게시판</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
+</head>
+<body>
+    <div class="page contact-page">
+
+        <header class="navbar">
+            <div class="nav-inner">
+                <a href="{{ url_for('index') }}" class="logo">OSSPrac</a>
+                <nav class="nav-menu">
+                    <a href="{{ url_for('index') }}">ROOT팀 소개</a>
+                    <a href="{{ url_for('board_list') }}" class="active">질문게시판</a>
+                    <a href="{{ url_for('input_page') }}">팀페이지 제작</a>
+                    <a href="{{ url_for('contact') }}">Contact</a>
+                    <button id="darkModeBtn" class="dark-mode-btn" type="button" style="background:none; border:none; cursor:pointer;">🌙</button>
+                </nav>
+            </div>
+        </header>
+
+        <div class="input-container">
+            <section class="contact-card">
+                <h1 class="contact-main-title">질문게시판</h1>
+
+                <div class="contact-title-box">
+                    <h2>ROOT Team Board</h2>
+                    <p>팀 프로젝트 관련 궁금한 점을 자유롭게 남겨주세요.</p>
+                </div>
+
+                <div style="text-align: right; margin-bottom: 20px;">
+                    <a href="{{ url_for('board_write') }}">
+                        <button type="button" class="btn-purple" style="padding: 10px 20px; border-radius: 8px; cursor: pointer;">새 글 작성</button>
+                    </a>
+                </div>
+
+                <div class="contact-table-wrap">
+                    <table class="contact-table">
+                        <thead>
+                            <tr>
+                                <th>번호</th>
+                                <th>제목</th>
+                                <th>작성자</th>
+                                <th>작성일</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for post in posts %}
+                            <tr>
+                                <td>{{ loop.revindex }}</td> 
+                                <td style="text-align: left;">
+                                    <a href="{{ url_for('board_detail', post_id=post.id) }}" style="text-decoration: none; color: inherit;">
+                                        {{ post.title }}
+                                    </a>
+                                </td>
+                                <td>{{ post.author }}</td>
+                                <td>{{ post.date }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {% if not posts %}
+                <div style="text-align: center; padding: 40px; opacity: 0.5;">
+                    <p>아직 작성된 게시글이 없습니다.</p>
+                </div>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+
+        <script>
+            const darkModeBtn = document.getElementById("darkModeBtn");
+
+            if (localStorage.getItem("darkMode") === "on") {
+                document.body.classList.add("dark-mode");
+                if (darkModeBtn) darkModeBtn.textContent = "☀️";
+            }
+
+            if (darkModeBtn) {
+                darkModeBtn.addEventListener("click", function () {
+                    document.body.classList.toggle("dark-mode");
+
+                    if (document.body.classList.contains("dark-mode")) {
+                        localStorage.setItem("darkMode", "on"); // 'on'으로 저장
+                        darkModeBtn.textContent = "☀️";
+                    } else {
+                        localStorage.setItem("darkMode", "off"); // 'off'로 저장
+                        darkModeBtn.textContent = "🌙";
+                    }
+                });
+            }
+        </script>
+</body>
+</html>

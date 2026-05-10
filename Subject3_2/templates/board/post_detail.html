@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ post.title }} - ROOT</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <style>
+        a { text-decoration: none; color: inherit; }
+        .post-content { border: 1px solid #888; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        body.dark-mode .post-content { border-color: #444; }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-inner">
+            <a href="{{ url_for('index') }}" class="logo">OSSPrac</a>
+            <nav class="nav-menu">
+                <a href="{{ url_for('index') }}">ROOT팀 소개</a>
+                <a href="{{ url_for('board_list') }}" class="active">질문게시판</a>
+                <a href="{{ url_for('input_page') }}">팀페이지 제작</a>
+                <a href="{{ url_for('contact') }}">Contact</a>
+                <button id="darkModeBtn" class="dark-mode-btn" type="button">🌙</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div style="text-align: right; margin-bottom: 10px;">
+            {% if prev_id %}
+                <a href="{{ url_for('board_detail', post_id=prev_id) }}">^ 이전글</a>
+            {% else %}
+                <a href="#" onclick="alert('이전글이 없습니다.'); return false;" style="color: gray;">^ 이전글</a>
+            {% endif %}
+
+            {% if next_id %}
+                <a href="{{ url_for('board_detail', post_id=next_id) }}">v 다음글</a>
+            {% else %}
+                <a href="#" onclick="alert('다음글이 없습니다.'); return false;" style="color: gray;">v 다음글</a>
+            {% endif %}
+
+            <a href="{{ url_for('board_list') }}">목록</a>
+        </div>
+
+        <hr>
+
+        <article>
+            <h2>{{ post.title }}</h2>
+            <p><strong>작성자:</strong> {{ post.author }} | <strong>날짜:</strong> {{ post.date }}</p>
+            <div class="post-content">
+                {{ post.content | replace('\n', '<br>') | safe }}
+            </div>
+
+            <div style="text-align: right; margin-top: 20px;">
+                <a href="{{ url_for('board_edit', post_id=post.id) }}">
+                    <button type="button">게시글 관리</button>
+                </a>
+            </div>
+        </article>
+        
+        <hr>
+
+        <section>
+            <h4>댓글 목록</h4>
+            {% for comment in comments %}
+                <div id="comment-{{ comment.id }}" style="border-bottom: 1px solid #eee; padding: 10px;">
+                    {% if request.args.get('edit_comment_id')|int == comment.id %}
+                        <form action="{{ url_for('comment_update') }}" method="POST">
+                            <input type="hidden" name="post_id" value="{{ post.id }}">
+                            <input type="hidden" name="comment_id" value="{{ comment.id }}">
+
+                            <input type="text" name="author" value="{{ comment.author }}" placeholder="닉네임" required>
+                            <input type="password" name="password" placeholder="비밀번호" maxlength="4" required>
+                            <br>
+                            <textarea name="content" style="width: 100%; margin-top: 5px;">{{ comment.content }}</textarea>
+                            <br>
+                            <button type="submit" name="action" value="edit">수정 완료</button>
+                            <button type="submit" name="action" value="delete" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+                            <a href="{{ url_for('board_detail', post_id=post.id) }}#comment-{{ comment.id }}"><button type="button">취소</button></a>
+                        </form>
+                    {% else %}
+                        <strong>{{ comment.author }}</strong>: {{ comment.content }} 
+                        <small style="color: #888;">({{ comment.date }})</small>
+                        <a href="{{ url_for('comment_edit_view', comment_id=comment.id) }}" style="font-size: 0.8em; color: gray; margin-left: 10px;">[수정/삭제]</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </section>
+
+        <hr>
+
+        <section>
+            <form action="{{ url_for('comment_update') }}" method="POST">
+                <input type="hidden" name="post_id" value="{{ post.id }}">
+                <input type="text" name="author" placeholder="작성자" required>
+                <input type="password" name="password" placeholder="비밀번호(4자리)" maxlength="4" pattern="\d{4}" required>
+                <br>
+                <textarea name="content" placeholder="댓글을 남겨보세요." rows="3" style="width: 100%;" required></textarea>
+                <br>
+                <button type="submit" name="action" value="add">댓글 등록</button>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        const darkModeBtn = document.getElementById("darkModeBtn");
+
+        // 페이지 로드 시 상태 확인 (index.html과 Key 통일)
+        if (localStorage.getItem("darkMode") === "on") {
+            document.body.classList.add("dark-mode");
+            if (darkModeBtn) darkModeBtn.textContent = "☀️";
+        }
+
+        if (darkModeBtn) {
+            darkModeBtn.addEventListener("click", function () {
+                document.body.classList.toggle("dark-mode");
+                if (document.body.classList.contains("dark-mode")) {
+                    localStorage.setItem("darkMode", "on");
+                    darkModeBtn.textContent = "☀️";
+                } else {
+                    localStorage.setItem("darkMode", "off");
+                    darkModeBtn.textContent = "🌙";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
