@@ -476,3 +476,10 @@ body.dark-mode .contact-title-box h2 {
 body.dark-mode .contact-title-box h2 * {
     color: #c9c3ff !important;
 }
+body.dark-mode .dark-mode-btn {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+body.dark-mode .dark-mode-btn:hover {
+    background: transparent !important;
+}

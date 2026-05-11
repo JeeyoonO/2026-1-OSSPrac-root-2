@@ -3,112 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <title>{% if post %}게시글 수정{% else %}새 글 작성{% endif %} - ROOT</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
-    <style>
-        .form-container { margin-top: 30px; max-width: 800px; }
-        .form-group { margin-bottom: 20px; }
-        label { font-weight: bold; display: block; margin-bottom: 8px; }
-        input[type="text"], input[type="password"], textarea {
-            width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;
-        }
-        .btn-group { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
-        /* 빨간색 빼고 심플하게 구성한 버튼 스타일 */
-        button { padding: 10px 20px; cursor: pointer; border-radius: 4px; border: 1px solid #ccc; background: #fff; }
-        .btn-main { background: #6c63ff; color: #fff; border: none; }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/board.css') }}">
 </head>
 <body>
-    <header class="navbar">
-        <div class="nav-inner">
-            <a href="{{ url_for('index') }}" class="logo">OSSPrac</a>
-            <nav class="nav-menu">
-                <a href="{{ url_for('index') }}">ROOT팀 소개</a>
-                <a href="{{ url_for('board_list') }}" class="active">질문게시판</a>
-                <a href="{{ url_for('input_page') }}">팀페이지 제작</a>
-                <a href="{{ url_for('contact') }}">Contact</a>
-                <button id="darkModeBtn" class="dark-mode-btn" type="button">🌙</button>
-            </nav>
-        </div>
-    </header>
 
-    <div class="container form-container">
-        <h2>{% if post %}게시글 수정{% else %}새 글 작성{% endif %}</h2>
-        <hr>
-        
-        <form action="{{ url_for('board_update') }}" method="POST">
-            
+<header class="navbar">
+    <div class="nav-inner">
+        <a href="{{ url_for('index') }}" class="logo">OSSPrac</a>
+
+        <nav class="nav-menu">
+            <a href="{{ url_for('index') }}">ROOT팀 소개</a>
+            <a href="{{ url_for('board_list') }}" class="active">질문게시판</a>
+            <a href="{{ url_for('input_page') }}">팀페이지 제작</a>
+            <a href="{{ url_for('contact') }}">Contact</a>
+            <button id="darkModeBtn" class="dark-mode-btn" type="button">
+                🌙
+            </button>
+        </nav>
+    </div>
+</header>
+
+<main class="board-page">
+    <section class="board-detail-card">
+
+        <div class="write-header">
+            <div>
+                <span class="detail-category">
+                    {% if post %}게시글 수정{% else %}글쓰기{% endif %}
+                </span>
+
+                <h1>
+                    {% if post %}게시글 수정{% else %}게시글 작성{% endif %}
+                </h1>
+
+                <p>
+                    {% if post %}
+                        기존 비밀번호를 입력해야 수정할 수 있습니다.
+                    {% else %}
+                        ROOT팀에게 궁금한 점이나 의견을 자유롭게 남겨주세요.
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="write-guide">
+                <strong>작성 안내</strong>
+                <span>
+                    제목, 작성자, 비밀번호, 내용을 모두 입력해주세요.
+                </span>
+            </div>
+        </div>
+
+        <form class="write-form" action="{{ url_for('board_update') }}" method="POST">
+
             {% if post %}
                 <input type="hidden" name="post_id" value="{{ post.id }}">
             {% endif %}
 
-            <div class="form-group">
-                <label>제목</label>
-                <input type="text" name="title" value="{{ post.title if post else '' }}" placeholder="제목을 입력하세요" required>
+            <label>
+                <span>제목</span>
+                <input type="text"
+                       name="title"
+                       value="{{ post.title if post else '' }}"
+                       placeholder="제목을 입력하세요"
+                       required>
+            </label>
+
+            <div class="write-row">
+                <label>
+                    <span>작성자</span>
+
+                    {% if post %}
+                        <input type="text"
+                               value="{{ post.author }}"
+                               readonly>
+                        <input type="hidden" name="author" value="{{ post.author }}">
+                    {% else %}
+                        <input type="text"
+                               name="author"
+                               placeholder="작성자"
+                               required>
+                    {% endif %}
+                </label>
+
+                <label>
+                    <span>비밀번호</span>
+                    <input type="password"
+                           name="password"
+                           placeholder="비밀번호 4자리"
+                           maxlength="4"
+                           pattern="\d{4}"
+                           required>
+                </label>
             </div>
 
-            <div class="form-group">
-                <label>작성자</label>
+            <label>
+                <span>내용</span>
+                <textarea name="content"
+                          placeholder="내용을 입력하세요"
+                          required>{{ post.content if post else '' }}</textarea>
+            </label>
+
+            <div class="write-buttons">
                 {% if post %}
-                    <div style="padding: 10px; background: #f9f9f9; border-radius: 4px; color: #333;">
-                        <strong>{{ post.author }}</strong>
-                    </div>
-                    <input type="hidden" name="author" value="{{ post.author }}">
+                    <button type="submit" name="action" value="edit">수정 완료</button>
+                    <button type="submit"
+                            name="action"
+                            value="delete"
+                            onclick="return confirm('정말 삭제하시겠습니까?')">
+                        삭제
+                    </button>
                 {% else %}
-                    <input type="text" name="author" placeholder="작성자 성함" required>
-                {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label>비밀번호 (숫자 4자리)</label>
-                <input type="password" name="password" placeholder="숫자 4자리 입력" maxlength="4" pattern="\d{4}" required>
-                <small style="color: gray;">
-                    {% if post %}수정/삭제를 위해 기존 비밀번호를 입력하세요.{% else %}관리용 비밀번호를 설정하세요.{% endif %}
-                </small>
-            </div>
-
-            <div class="form-group">
-                <label>내용</label>
-                <textarea name="content" rows="12" placeholder="내용을 입력하세요" required>{{ post.content if post else '' }}</textarea>
-            </div>
-
-            <hr>
-            
-            <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                {% if post %}
-                    <button type="submit" name="action" value="edit" class="btn-primary">수정 완료</button>
-                    <button type="submit" name="action" value="delete" class="btn-danger" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
-                {% else %}
-                    <button type="submit" name="action" value="add" class="btn-primary">등록하기</button>
+                    <button type="submit" name="action" value="add">등록</button>
                 {% endif %}
 
-                <a href="{{ url_for('board_list') }}">
-                    <button type="button">취소</button>
-                </a>
+                <a href="{{ url_for('board_list') }}" class="cancel-btn">취소</a>
             </div>
+
         </form>
-    </div>
 
-    <script>
-        const darkModeBtn = document.getElementById("darkModeBtn");
+    </section>
+</main>
 
-        if (localStorage.getItem("darkMode") === "on") {
-            document.body.classList.add("dark-mode");
-            if (darkModeBtn) darkModeBtn.textContent = "☀️";
+<script>
+const darkModeBtn = document.getElementById("darkModeBtn");
+
+if (localStorage.getItem("darkMode") === "on") {
+    document.body.classList.add("dark-mode");
+    if (darkModeBtn) darkModeBtn.textContent = "☀️";
+}
+
+if (darkModeBtn) {
+    darkModeBtn.addEventListener("click", function () {
+        document.body.classList.toggle("dark-mode");
+
+        if (document.body.classList.contains("dark-mode")) {
+            localStorage.setItem("darkMode", "on");
+            darkModeBtn.textContent = "☀️";
+        } else {
+            localStorage.setItem("darkMode", "off");
+            darkModeBtn.textContent = "🌙";
         }
+    });
+}
+</script>
 
-        if (darkModeBtn) {
-            darkModeBtn.addEventListener("click", function () {
-                document.body.classList.toggle("dark-mode");
-
-                if (document.body.classList.contains("dark-mode")) {
-                    localStorage.setItem("darkMode", "on");
-                    darkModeBtn.textContent = "☀️";
-                } else {
-                    localStorage.setItem("darkMode", "off");
-                    darkModeBtn.textContent = "🌙";
-                }
-            });
-        }
-    </script>
 </body>
 </html>

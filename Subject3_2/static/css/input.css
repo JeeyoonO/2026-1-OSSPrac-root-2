@@ -82,13 +82,6 @@
     padding: 8px;
 }
 
-.file-row {
-    padding: 12px;
-    background: #f7f6ff;
-    border: 1px dashed #b8b2ff;
-    border-radius: 10px;
-}
-
 .ai-box {
     margin-top: 14px;
     padding: 18px;
@@ -187,7 +180,13 @@
 
 .file-row {
     background: #f3f0ff;
-    border: 1px dashed #8b80ff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px dashed #cfc8ff;
+    border-radius: 12px;
+    padding: 10px 12px;
+    background: #faf9ff;
 }
 
 .current-file {
@@ -334,11 +333,6 @@
     letter-spacing: 1.4px;
 }
 /*파일 취소*/
-.file-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
 
 .file-row input[type="file"] {
     flex: 1;
@@ -621,15 +615,155 @@ body.dark-mode .file-clear-btn {
 .sketch-ai-input::placeholder {
     color: #888;
 }
+/* =========================
+   DARK MODE - INPUT PAGE
+========================= */
 
-/* 다크모드 */
-body.dark-mode .sketch-ai-input {
-    background: #232338;
-    color: #f5f5f5;
-    border: 1px solid #3d3d5c;
+body.dark-mode {
+    background: #111827;
+    color: #f3f4f6;
 }
 
-/* 다크모드 placeholder */
-body.dark-mode .sketch-ai-input::placeholder {
-    color: #a9a9c8;
+/* 전체 카드 */
+body.dark-mode .board-card {
+    background: #1f2937;
+    box-shadow: 0 0 20px rgba(0,0,0,0.35);
+}
+
+/* 제목 */
+body.dark-mode .board-title-box h1 {
+    color: #ffffff;
+}
+
+body.dark-mode .board-title-box p {
+    color: #cbd5e1;
+}
+
+/* 게시글 개수 */
+body.dark-mode .board-top p {
+    color: #d1d5db;
+}
+
+body.dark-mode .board-top strong {
+    color: #8b5cf6;
+}
+
+/* 테이블 */
+body.dark-mode .board-table {
+    background: #1f2937;
+    color: #f3f4f6;
+}
+
+body.dark-mode .board-table thead {
+    background: #374151;
+}
+
+body.dark-mode .board-table th {
+    color: #f9fafb;
+}
+
+body.dark-mode .board-table td {
+    border-bottom: 1px solid #374151;
+    color: #e5e7eb;
+}
+
+/* 제목 링크 */
+body.dark-mode .post-title a {
+    color: #f9fafb;
+}
+
+body.dark-mode .post-title a:hover {
+    color: #a78bfa;
+}
+
+/* 검색창 */
+body.dark-mode .search-box select,
+body.dark-mode .search-box input {
+    background: #111827;
+    border: 1px solid #4b5563;
+    color: #f9fafb;
+}
+
+body.dark-mode .search-box input::placeholder {
+    color: #9ca3af;
+}
+
+/* 버튼 */
+body.dark-mode .write-btn,
+body.dark-mode .search-box button {
+    background: linear-gradient(135deg, #7c3aed, #6366f1);
+    color: white;
+}
+
+body.dark-mode .write-btn:hover,
+body.dark-mode .search-box button:hover {
+    opacity: 0.9;
+}
+
+/* navbar */
+body.dark-mode .navbar {
+    background: #111827;
+    border-bottom: 1px solid #374151;
+}
+
+body.dark-mode .nav-menu a {
+    color: #f3f4f6;
+}
+
+body.dark-mode .nav-menu a.active {
+    color: #a78bfa;
+}
+
+/* 다크모드 버튼 */
+body.dark-mode .dark-mode-btn {
+    background: #374151;
+    color: #f9fafb;
+}
+
+/* 검색 하이라이트 */
+body.dark-mode .highlight {
+    background: #facc15;
+    color: #111827;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+.sketch-upload-top input[type="file"] {
+    width: 340px;
+
+    padding: 0;
+
+    border: 1px dashed #8b7cff;
+    border-radius: 0;
+
+    background: transparent;
+    color: #111;
+
+    transform: translateY(-3px);
+}
+
+.sketch-upload-top input[type="file"]::file-selector-button {
+    height: 35px;
+    padding: 0 22px;
+    margin-right: 14px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: #6c63ff;
+    color: #fff;
+
+    font-weight: 700;
+    cursor: pointer;
+}
+
+body.dark-mode .sketch-upload-top input[type="file"] {
+    border: 1px dashed #5f55cc;
+    background: transparent;
+    color: #f5f5f5;
+
+    transform: translateY(-3px);
+}
+
+.file-clear-btn {
+    transform: translateY(-3px);
 }
