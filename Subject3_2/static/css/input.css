@@ -767,3 +767,16 @@ body.dark-mode .sketch-upload-top input[type="file"] {
 .file-clear-btn {
     transform: translateY(-3px);
 }
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.form-buttons-left,
+.form-buttons-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
