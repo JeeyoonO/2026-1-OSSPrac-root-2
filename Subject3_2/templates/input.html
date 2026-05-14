@@ -309,13 +309,26 @@
             <p style="text-align:right; font-size:13px; color:#666;">
                 현재 {{ member_count }} / 4명
             </p>
-
             <div class="form-buttons">
+
+            <div class="form-buttons-left">
+                {% if not member %}
                 <button type="button" class="btn-light"
                         onclick="location.href='{{ url_for('reset_team') }}'">
                     처음부터
                 </button>
+                {% endif %}
 
+                {% if not member and member_count > 0 %}
+                <button type="button"
+                        class="btn-light back-btn"
+                        onclick="history.back()">
+                    뒤로가기
+                </button>
+                {% endif %}
+            </div>
+
+            <div class="form-buttons-right">
                 {% if member %}
                 <button type="submit" name="action" value="edit" class="btn-outline">
                     수정 완료
@@ -336,6 +349,9 @@
                 </button>
                 {% endif %}
             </div>
+
+        </div>
+    </div>
 
         </form>
     </div>

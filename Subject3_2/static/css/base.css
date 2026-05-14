@@ -193,10 +193,6 @@ body.dark-mode .nav-menu .dropdown-menu a:hover {
     transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-.dark-mode-btn:hover {
-    background-color: #f1efff;
-    transform: scale(1.08);
-}
 /* =========================
    DARK MODE
 ========================= */
@@ -482,4 +478,12 @@ body.dark-mode .dark-mode-btn {
 }
 body.dark-mode .dark-mode-btn:hover {
     background: transparent !important;
+}
+.dark-mode-btn,
+.dark-mode-btn:hover,
+.dark-mode-btn:focus,
+.dark-mode-btn:active {
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
 }
