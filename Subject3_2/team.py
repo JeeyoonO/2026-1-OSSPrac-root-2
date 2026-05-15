@@ -404,7 +404,16 @@ def update_member():
                 team["members"][idx] = member_data
                 save_generated_team(team)
 
-                return redirect(url_for("member_detail", member_id=member_id))
+                flow = request.form.get("flow", "")
+
+                if flow == "edit":
+                    if idx + 1 < len(team["members"]):
+                        next_member_id = team["members"][idx + 1]["id"]
+                        return redirect(url_for("input_page", member_id=next_member_id, flow="edit"))
+                    else:
+                        return redirect(url_for("result"))
+                else:
+                    return redirect(url_for("member_detail", member_id=member_id))
 
         abort(404)
 

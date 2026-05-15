@@ -107,19 +107,20 @@
         </h1>
 
         <form action="{{ url_for('update_member') }}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="flow" value="{{ request.args.get('flow', '') }}">
             {% if member %}
             <input type="hidden" name="member_id" value="{{ member.id }}">
             {% endif %}
 
-            {% if not member and member_count == 0 %}
+            {% if (not member and member_count == 0) or (member and member.id == 1000 and request.args.get('flow') == 'edit') %}
             <section class="form-card">
                 <h2>팀 정보</h2>
 
                 <label>팀명</label>
-                <input type="text" name="team_name" placeholder="팀명을 입력하세요">
+                <input type="text" name="team_name" placeholder="팀명을 입력하세요" value="{{ team.team_name if team else '' }}">
 
                 <label>팀 한 줄 소개</label>
-                <input type="text" name="team_intro" placeholder="팀 소개를 입력하세요">
+                <input type="text" name="team_intro" placeholder="팀 소개를 입력하세요" value="{{ team.team_intro if team else '' }}">
 
             <label>팀 대표 사진</label>
 

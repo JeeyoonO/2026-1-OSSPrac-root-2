@@ -76,7 +76,10 @@
                     onclick="location.href='{{ url_for('reset_team') }}'">
                 팀 다시 만들기
             </button>
-
+            <button type="button" class="btn-purple"
+                    onclick="location.href='{{ url_for('input_page', member_id=1000, flow='edit') }}'">
+                수정하기
+            </button>
             <button type="button" class="btn-purple" onclick="window.print()">
             전체 PDF 저장
             </button>
